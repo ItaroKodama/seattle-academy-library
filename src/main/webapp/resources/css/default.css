@@ -2,11 +2,6 @@
 * {
     font-family: "Noto Sans JP";
 }
-
-.errorMessage{
-	color: red;
-}
-
 /* 装飾ボタン：マーカー */
 .marker {
     position: relative;

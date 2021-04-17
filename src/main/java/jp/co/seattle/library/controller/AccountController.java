@@ -52,27 +52,18 @@ public class AccountController {
         // デバッグ用ログ
         logger.info("Welcome createAccount! The client locale is {}.", locale);
 
-        // バリデーションチェック、パスワード一致チェック実装   
-        if (!(email.matches("^[a-zA-Z0-9]+@[a-zA-Z0-9]+$"))) {
-            model.addAttribute("accountErrorMessage1", "メールアドレスの形式が間違っています");
-            return "createAccount";
-        } else if (!(password.matches("^[a-zA-Z0-9]+$"))) {
-            model.addAttribute("accountErrorMessage2", "パスワードは半角英数字で入力してください");
-            return "createAccount";
-        } else if (!(password.equals(passwordForCheck))) {
-            model.addAttribute("accountErrorMessage3", "パスワードが一致しません");
-            return "createAccount";
-        } else {
-            // パラメータで受け取ったユーザ情報をDtoに格納する。
-            UserInfo userInfo = new UserInfo();
-            userInfo.setEmail(email);
-            userInfo.setPassword(password);
-            usersService.registUser(userInfo);
-        }
+        // パラメータで受け取った書籍情報をDtoに格納する。
+        UserInfo userInfo = new UserInfo();
+        userInfo.setEmail(email);
 
-        return "login";
 
-        //        model.addAttribute("bookList", booksService.getBookList());
-        //        return "home";
+        // TODO バリデーションチェック、パスワード一致チェック実装
+
+        userInfo.setPassword(password);
+        usersService.registUser(userInfo);
+
+        model.addAttribute("bookList", booksService.getBookList());
+        return "home";
     }
+
 }
