@@ -26,10 +26,13 @@
                     <form method="post" action="createAccount">
                         <div class="title">アカウントの作成</div>
                         <label class="label">メールアドレス</label>
+                        <font color="red">${accountErrorMessage1}</font>
                         <input type="email" class="input" id="email" name="email" autocomplete="off" required>
                         <label class="label">パスワード</label>
+                        <font color="red">${accountErrorMessage2}</font>
                         <input type="password" class="input" id="password" name="password" required>
                         <label class="label">パスワード（確認用）</label>
+                        <font color="red">${accountErrorMessage3}</font>
                         <input type="password" class="input" id="passwordForCheck" name="passwordForCheck" required>
                         <input type="submit" class="button primary" value="作成する" >
                     </form>
