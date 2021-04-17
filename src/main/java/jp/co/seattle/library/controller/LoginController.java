@@ -51,8 +51,11 @@ public class LoginController {
 
 
         // 本の情報を取得して画面側に渡す
-        model.addAttribute("bookList", booksService.getBookList());
+        if (booksService.getBookList().isEmpty()) {
+            model.addAttribute("noBook", "書籍データがありません");
+        } else {
+            model.addAttribute("bookList", booksService.getBookList());
+        }
         return "home";
-
     }
 }
