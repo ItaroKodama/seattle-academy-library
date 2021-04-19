@@ -45,8 +45,7 @@ public class DeleteBookController {
         logger.info("Welcome delete! The client locale is {}.", locale);
 
         // booksテーブルから該当の書籍データを削除
-        String sql = "delete from books where ID = " + bookId;
-        jdbcTemplate.update(sql);
+        booksService.deleteBook(bookId);
 
         if (booksService.getBookList().isEmpty()) {
             model.addAttribute("noBook", "書籍データがありません");
