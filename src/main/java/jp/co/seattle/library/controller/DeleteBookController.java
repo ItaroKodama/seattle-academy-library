@@ -4,6 +4,8 @@ import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -11,12 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import jp.co.seattle.library.service.BooksService;
+
 /**
  * 削除コントローラー
  */
 @Controller //APIの入り口
 public class DeleteBookController {
     final static Logger logger = LoggerFactory.getLogger(DeleteBookController.class);
+
+    @Autowired
+    private BooksService booksService;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
 
     /**
@@ -35,8 +44,15 @@ public class DeleteBookController {
             Model model) {
         logger.info("Welcome delete! The client locale is {}.", locale);
 
+        // booksテーブルから該当の書籍データを削除
+        booksService.deleteBook(bookId);
 
-        return "";
+        if (booksService.getBookList().isEmpty()) {
+            model.addAttribute("noBook", "書籍データがありません");
+        } else {
+            model.addAttribute("bookList", booksService.getBookList());
+        }
+        return "home";
 
     }
 
