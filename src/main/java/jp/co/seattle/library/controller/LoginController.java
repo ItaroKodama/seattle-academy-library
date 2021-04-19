@@ -43,19 +43,21 @@ public class LoginController {
             @RequestParam("password") String password,
             Model model) {
 
-        // TODO 下記のコメントアウトを外してサービスクラスを使用してください。
-//        UserInfo selectedUserInfo = usersService.selectUserInfo(email, password);
-
         // TODO パスワードとメールアドレスの組み合わせ存在チェック実装
-        
-
-
-        // 本の情報を取得して画面側に渡す
-        if (booksService.getBookList().isEmpty()) {
-            model.addAttribute("noBook", "書籍データがありません");
+        if (usersService.selectUserInfo(email) == null) {
+            model.addAttribute("loginErrorMessage1", "アカウントが存在しません、作成してください");
+            return "login";
+        } else if (!(password.equals(usersService.selectUserInfo(email).getPassword()))) {
+            model.addAttribute("loginErrorMessage2", "パスワードが間違っています");
+            return "login";
         } else {
-            model.addAttribute("bookList", booksService.getBookList());
+            // 本の情報を取得して画面側に渡す
+            if (booksService.getBookList().isEmpty()) {
+                model.addAttribute("noBook", "書籍データがありません");
+            } else {
+                model.addAttribute("bookList", booksService.getBookList());
+            }
+            return "home";
         }
-        return "home";
     }
 }
