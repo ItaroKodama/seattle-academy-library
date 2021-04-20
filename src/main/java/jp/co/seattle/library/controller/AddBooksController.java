@@ -54,9 +54,8 @@ public class AddBooksController {
             @RequestParam("publisher") String publisher,
             @RequestParam("thumbnail") MultipartFile file,
             @RequestParam("publish_date") String publish_date,
-            @RequestParam("ISBN") String ISBN,
+            @RequestParam("ISBN") String isbn,
             @RequestParam("description") String description,
-            @RequestParam("bookId") Integer bookId,
             Model model) {
         logger.info("Welcome insertBooks.java! The client locale is {}.", locale);
 
@@ -66,16 +65,20 @@ public class AddBooksController {
         bookInfo.setAuthor(author);
         bookInfo.setPublisher(publisher);
         bookInfo.setPublish_date(publish_date);
-        bookInfo.setISBN(ISBN);
+        bookInfo.setIsbn(isbn);
         bookInfo.setDescription(description);
         
         //出版日とISBNのバリデーションチェック
+        boolean flag = false;
         if (!(bookInfo.getPublish_date().matches("(19[0-9]{2}|20[0-9]{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])"))) {
             model.addAttribute("notDateError", "出版日はYYYYMMDDの形式で入力してください");
-            return "addBook";
+            flag = true;
         }
-        if (!(bookInfo.getISBN().matches("([0-9]{10}|[0-9]{13})?"))) {
+        if (!(bookInfo.getIsbn().matches("([0-9]{10}|[0-9]{13})?"))) {
             model.addAttribute("notISBNError", "ISBNは10桁もしくは13桁の数字で入力してください");
+            flag = true;
+        }
+        if (flag == true) {
             return "addBook";
         }
 
@@ -109,6 +112,6 @@ public class AddBooksController {
         // TODO 登録した書籍の詳細情報を表示するように実装
         //  詳細画面に遷移する
         model.addAttribute("bookInfo", booksService.getBookInfo(booksService.getBookId()));
-        return "addBook";
+        return "details";
     }
 }

@@ -90,10 +90,10 @@
                         	<div class="error">${notISBNError}</div>
                         </c:if>
 						<c:if test="${!empty bookInfo}">
-							<input type="text" name="ISBN" value="${bookInfo.ISBN}">
+							<input type="text" name="isbn" value="${bookInfo.ISBN}">
 						</c:if>
 						<c:if test="${empty bookInfo}">
-							<input type="text" name="ISBN">
+							<input type="text" name="isbn">
 						</c:if>
 					</div>
 					<div>
@@ -108,14 +108,7 @@
 					<input type="hidden" id="bookId" name="bookId" value="${bookInfo.bookId}">
 				</div>
 			</div>
-			<c:if test="${empty bookInfo}">
-				<div class="addBookBtn_box">
-					<button type="submit" id="add-btn" class="btn_addBook">登録</button>
-				</div>
-			</c:if>
-			<c:if test="${!empty bookInfo}">
-				<a href="<%= request.getContextPath()%>/addBook" class="btn_add_book">追加登録</a>
-			</c:if>
+			<button type="submit" id="add-btn" class="btn_addBook">登録</button>
 		</form>
 	</main>
 </body>
