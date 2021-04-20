@@ -33,6 +33,7 @@
     <main>
         <h1>書籍の詳細</h1>
             <div class="content_body detail_book_content">
+            <div><font color="red">${resultMessage}</font></div>
                 <div class="content_left">
                     <span>書籍の画像</span>
                      <div class="book_thumnail">
@@ -60,6 +61,18 @@
                          <span>出版社</span>
                          <p>${bookDetailsInfo.publisher}</p>
                      </div>
+                     <div>
+                         <span>出版日</span>
+                         <p>${bookDetailsInfo.publish_date}</p>
+                     </div>
+                     <div>
+                         <span>ISBN</span>
+                         <p>${bookDetailsInfo.ISBN}</p>
+                     </div>
+                     <div>
+                         <span>説明文</span>
+                         <p>${bookDetailsInfo.description}</p>
+                     </div>                     
                  </div>
             </div>
             <div class="edtDelBookBtn_box">

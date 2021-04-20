@@ -45,28 +45,61 @@
 					<div>
 						<span>書籍名</span><span class="care care2">必須</span>
 						<c:if test="${!empty bookInfo}">
-							<input type="text" name="title" value="${bookInfo.title}">
+							<input type="text" name="title" value="${bookInfo.title}" required>
 						</c:if>
 						<c:if test="${empty bookInfo}">
-							<input type="text" name="title" autocomplete="off">
+							<input type="text" name="title" autocomplete="off" required>
 						</c:if>
 					</div>
 					<div>
 						<span>著者名</span><span class="care care2">必須</span>
 						<c:if test="${!empty bookInfo}">
-							<input type="text" name="author" value="${bookInfo.author}">
+							<input type="text" name="author" value="${bookInfo.author}" required>
 						</c:if>
 						<c:if test="${empty bookInfo}">
-							<input type="text" name="author" autocomplete="off">
+							<input type="text" name="author" autocomplete="off" required>
 						</c:if>
 					</div>
 					<div>
 						<span>出版社</span><span class="care care2">必須</span>
 						<c:if test="${!empty bookInfo}">
-							<input type="text" name="publisher" value="${bookInfo.publisher}">
+							<input type="text" name="publisher" value="${bookInfo.publisher}" required>
 						</c:if>
 						<c:if test="${empty bookInfo}">
-							<input type="text" name="publisher">
+							<input type="text" name="publisher" required>
+						</c:if>
+					</div>
+					<div>
+						<span>出版日</span><span class="care care2">必須</span>
+						<c:if test="${!empty notDateError}">
+                        	<div class="error">${notDateError}</div>
+                        </c:if>
+						<c:if test="${!empty bookInfo}">
+							<input type="text" name="publish_date" value="${bookInfo.publish_date}" required>
+						</c:if>
+						<c:if test="${empty bookInfo}">
+							<input type="text" name="publish_date" required placeholder="YYYYMMDD">
+						</c:if>
+					</div>
+					<div>
+						<span>ISBN</span><span class="care care1">任意</span>
+						<c:if test="${!empty notISBNError}">
+                        	<div class="error">${notISBNError}</div>
+                        </c:if>
+						<c:if test="${!empty bookInfo}">
+							<input type="text" name="ISBN" value="${bookInfo.ISBN}">
+						</c:if>
+						<c:if test="${empty bookInfo}">
+							<input type="text" name="ISBN">
+						</c:if>
+					</div>
+					<div>
+						<span>説明文</span><span class="care care1">任意</span>
+						<c:if test="${!empty bookInfo}">
+							<input type="text" name="description" value="${bookInfo.description}">
+						</c:if>
+						<c:if test="${empty bookInfo}">
+							<input type="text" name="description">
 						</c:if>
 					</div>
 					<input type="hidden" id="bookId" name="bookId" value="${bookInfo.bookId}">
