@@ -29,10 +29,13 @@
       </ul>
     </div>
   </header>
-  <main>
-	<form action="<%=request.getContextPath()%>/insertBook" method="post" enctype="multipart/form-data" id="data_upload_form">
-		<h1>書籍の追加</h1>
+	<main>
+		<form action="<%=request.getContextPath()%>/insertBook" method="post" enctype="multipart/form-data" id="data_upload_form">
+			<h1>書籍の追加</h1>
 			<div class="content_body add_book_content">
+			<c:if test="${!empty resultMessage}">
+				<font color="red">${resultMessage}</font>
+			</c:if>
 					<div>
 						<span>書籍の画像</span>
 						<span class="care care1">任意</span>
@@ -45,7 +48,7 @@
 					<div>
 						<span>書籍名</span><span class="care care2">必須</span>
 						<c:if test="${!empty bookInfo}">
-							<input type="text" name="title" value="${bookInfo.title}" required>
+							<input type="text" name="title" value="${bookInfo.title}">
 						</c:if>
 						<c:if test="${empty bookInfo}">
 							<input type="text" name="title" autocomplete="off" required>
@@ -54,7 +57,7 @@
 					<div>
 						<span>著者名</span><span class="care care2">必須</span>
 						<c:if test="${!empty bookInfo}">
-							<input type="text" name="author" value="${bookInfo.author}" required>
+							<input type="text" name="author" value="${bookInfo.author}">
 						</c:if>
 						<c:if test="${empty bookInfo}">
 							<input type="text" name="author" autocomplete="off" required>
@@ -63,7 +66,7 @@
 					<div>
 						<span>出版社</span><span class="care care2">必須</span>
 						<c:if test="${!empty bookInfo}">
-							<input type="text" name="publisher" value="${bookInfo.publisher}" required>
+							<input type="text" name="publisher" value="${bookInfo.publisher}">
 						</c:if>
 						<c:if test="${empty bookInfo}">
 							<input type="text" name="publisher" required>
@@ -75,7 +78,7 @@
                         	<div class="error">${notDateError}</div>
                         </c:if>
 						<c:if test="${!empty bookInfo}">
-							<input type="text" name="publish_date" value="${bookInfo.publish_date}" required>
+							<input type="text" name="publish_date" value="${bookInfo.publish_date}">
 						</c:if>
 						<c:if test="${empty bookInfo}">
 							<input type="text" name="publish_date" required placeholder="YYYYMMDD">
@@ -105,11 +108,15 @@
 					<input type="hidden" id="bookId" name="bookId" value="${bookInfo.bookId}">
 				</div>
 			</div>
+			<c:if test="${empty bookInfo}">
 				<div class="addBookBtn_box">
 					<button type="submit" id="add-btn" class="btn_addBook">登録</button>
 				</div>
-			</form>
-		</div>
+			</c:if>
+			<c:if test="${!empty bookInfo}">
+				<a href="<%= request.getContextPath()%>/addBook" class="btn_add_book">追加登録</a>
+			</c:if>
+		</form>
 	</main>
 </body>
 </html>

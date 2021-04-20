@@ -33,7 +33,6 @@
     <main>
         <h1>書籍の詳細</h1>
             <div class="content_body detail_book_content">
-            <div><font color="red">${resultMessage}</font></div>
                 <div class="content_left">
                     <span>書籍の画像</span>
                      <div class="book_thumnail">
