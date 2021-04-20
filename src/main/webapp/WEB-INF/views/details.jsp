@@ -38,7 +38,7 @@
                      <div class="book_thumnail">
                         <a href="${bookDetailsInfo.thumbnailUrl}" data-lightbox="image-1">
                             <c:if test="${empty bookDetailsInfo.thumbnailUrl}">
-                                <img class="book_noimg" src="resources/img/noImg.png">
+                                <img class="book_noimg" src="resources/img/noImg.png" alt="NO IMAGE">
                             </c:if>
                             <c:if test="${!empty bookDetailsInfo.thumbnailUrl}">
                             	<img class="book_noimg" src="${bookDetailsInfo.thumbnailUrl}">
@@ -63,6 +63,15 @@
                  </div>
             </div>
             <div class="edtDelBookBtn_box">
+                <form method="post" action="borrowBook">
+                    <button type="submit" value="${bookDetailsInfo.bookId}" name="bookId" class="btn_deleteBook" >借りる</button>
+                </form>
+                <form method="post" action="returnBook">
+                    <button type="submit" value="${bookDetailsInfo.bookId}" name="bookId" class="btn_deleteBook" >返す</button>
+                </form>
+                <form method="post" action="editBook">
+                    <button type="submit" value="${bookDetailsInfo.bookId}" name="bookId" class="btn_deleteBook" >編集</button>
+                </form>
                 <form method="post" action="deleteBook">
                     <button type="submit" value="${bookDetailsInfo.bookId}" name="bookId" class="btn_deleteBook" >削除</button>
                 </form>
