@@ -78,7 +78,7 @@ public class AddBooksController {
             model.addAttribute("notISBNError", "ISBNは10桁もしくは13桁の数字で入力してください");
             flag = true;
         }
-        if (flag == true) {
+        if (flag) {
             return "addBook";
         }
 
@@ -106,8 +106,6 @@ public class AddBooksController {
 
         // 書籍情報を新規登録する
         booksService.registBook(bookInfo);
-
-        model.addAttribute("resultMessage", "登録完了");
 
         // TODO 登録した書籍の詳細情報を表示するように実装
         //  詳細画面に遷移する
