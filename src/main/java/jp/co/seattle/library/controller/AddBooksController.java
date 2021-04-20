@@ -54,7 +54,7 @@ public class AddBooksController {
             @RequestParam("publisher") String publisher,
             @RequestParam("thumbnail") MultipartFile file,
             @RequestParam("publish_date") String publish_date,
-            @RequestParam("ISBN") String isbn,
+            @RequestParam("isbn") String isbn,
             @RequestParam("description") String description,
             Model model) {
         logger.info("Welcome insertBooks.java! The client locale is {}.", locale);
@@ -111,7 +111,7 @@ public class AddBooksController {
 
         // TODO 登録した書籍の詳細情報を表示するように実装
         //  詳細画面に遷移する
-        model.addAttribute("bookInfo", booksService.getBookInfo(booksService.getBookId()));
+        model.addAttribute("bookDetailsInfo", booksService.getBookInfo(booksService.getBookId()));
         return "details";
     }
 }

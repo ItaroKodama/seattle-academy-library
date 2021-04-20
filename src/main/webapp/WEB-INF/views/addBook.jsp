@@ -33,9 +33,6 @@
 		<form action="<%=request.getContextPath()%>/insertBook" method="post" enctype="multipart/form-data" id="data_upload_form">
 			<h1>書籍の追加</h1>
 			<div class="content_body add_book_content">
-			<c:if test="${!empty resultMessage}">
-				<font color="red">${resultMessage}</font>
-			</c:if>
 					<div>
 						<span>書籍の画像</span>
 						<span class="care care1">任意</span>
@@ -90,7 +87,7 @@
                         	<div class="error">${notISBNError}</div>
                         </c:if>
 						<c:if test="${!empty bookInfo}">
-							<input type="text" name="isbn" value="${bookInfo.ISBN}">
+							<input type="text" name="isbn" value="${bookInfo.isbn}">
 						</c:if>
 						<c:if test="${empty bookInfo}">
 							<input type="text" name="isbn">
@@ -106,9 +103,9 @@
 						</c:if>
 					</div>
 					<input type="hidden" id="bookId" name="bookId" value="${bookInfo.bookId}">
+					<button type="submit" id="add-btn" class="btn_addBook">登録</button>
 				</div>
 			</div>
-			<button type="submit" id="add-btn" class="btn_addBook">登録</button>
 		</form>
 	</main>
 </body>
