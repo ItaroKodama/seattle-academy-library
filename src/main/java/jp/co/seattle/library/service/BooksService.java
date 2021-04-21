@@ -65,8 +65,11 @@ public class BooksService {
      */
     public void registBook(BookDetailsInfo bookInfo) {
 
-        String sql = "INSERT INTO books (title, author,publisher,thumbnail_name,thumbnail_url,reg_date,upd_date) VALUES ('"
+        String sql = "INSERT INTO books (title, author,publisher,publish_date,isbn,description,thumbnail_name,thumbnail_url,reg_date,upd_date) VALUES ('"
                 + bookInfo.getTitle() + "','" + bookInfo.getAuthor() + "','" + bookInfo.getPublisher() + "','"
+                + bookInfo.getPublish_date() + "','"
+                + bookInfo.getIsbn() + "','"
+                + bookInfo.getDescription() + "','"
                 + bookInfo.getThumbnailName() + "','"
                 + bookInfo.getThumbnailUrl() + "',"
                 + "sysdate(),"
@@ -82,5 +85,16 @@ public class BooksService {
     public void deleteBook(int bookId) {
         String sql = "delete from books where ID = " + bookId;
         jdbcTemplate.update(sql);
+    }
+
+    /**
+     * 追加した書籍のIDを取得
+     * @return booksテーブルのIDの最大値
+     */
+    public int getBookId(){
+        String sql = "SELECT MAX(ID) FROM books";
+
+        int id = jdbcTemplate.queryForObject(sql, Integer.class);
+        return id;
     }
 }

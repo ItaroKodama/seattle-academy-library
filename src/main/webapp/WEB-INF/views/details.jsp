@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form"%>
-
 <html>
 <head>
 <meta charset="UTF-8">
@@ -60,6 +59,18 @@
                          <span>出版社</span>
                          <p>${bookDetailsInfo.publisher}</p>
                      </div>
+                     <div>
+                         <span>出版日</span>
+                         <p>${bookDetailsInfo.publish_date}</p>
+                     </div>
+                     <div>
+                         <span>ISBN</span>
+                         <p>${bookDetailsInfo.isbn}</p>
+                     </div>
+                     <div>
+                         <span>説明文</span>
+                         <p>${bookDetailsInfo.description}</p>
+                    </div>
                  </div>
             </div>
             <div class="edtDelBookBtn_box">
@@ -77,8 +88,5 @@
                 </form>
             </div>
     </main>
-
-
-
 </body>
 </html>
