@@ -50,7 +50,7 @@ public class EditBookController {
     }
 
     /**
-     * 対象書籍を削除する
+     * 対象書籍を更新する
      *
      * @param locale ロケール情報
      * @param bookId 書籍ID
