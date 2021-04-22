@@ -1,5 +1,6 @@
 package jp.co.seattle.library.controller;
 
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,11 +22,11 @@ import jp.co.seattle.library.service.BooksService;
 import jp.co.seattle.library.service.ThumbnailService;
 
 /**
- * Handles requests for the application home page.
+ * 編集コントローラー
  */
 @Controller //APIの入り口
-public class AddBooksController {
-    final static Logger logger = LoggerFactory.getLogger(AddBooksController.class);
+public class EditBookController {
+    final static Logger logger = LoggerFactory.getLogger(EditBookController.class);
 
     @Autowired
     private BooksService booksService;
@@ -33,25 +34,36 @@ public class AddBooksController {
     @Autowired
     private ThumbnailService thumbnailService;
 
-    @RequestMapping(value = "/addBook", method = RequestMethod.GET) //value＝actionで指定したパラメータ
-    //RequestParamでname属性を取得
-    public String login(Model model) {
-        return "addBook";
+    /**
+     * 詳細画面で編集ボタンを押下した時に書籍編集画面に遷移する
+     * 
+     * @param locale ローケル情報
+     * @param bookId 書籍
+     * @param model モデル情報
+     * @return 遷移画面名
+     */
+    @Transactional
+    @RequestMapping(value = "/editBook", method = RequestMethod.POST)
+    public String editBook(Locale locale,
+            @RequestParam("bookId") Integer bookId,
+            Model model) {
+        logger.info("Welcome delete! The client locale is {}.", locale);
+
+        model.addAttribute("bookInfo", booksService.getBookInfo(bookId));
+        return "editBook";
     }
 
     /**
-     * 書籍情報を登録する
+     * 対象書籍を更新する
+     *
      * @param locale ロケール情報
-     * @param title 書籍名
-     * @param author 著者名
-     * @param publisher 出版社
-     * @param file サムネイルファイル
-     * @param model モデル
-     * @return 遷移先画面
+     * @param bookId 書籍ID
+     * @param model モデル情報
+     * @return 遷移先画面名
      */
     @Transactional
-    @RequestMapping(value = "/insertBook", method = RequestMethod.POST, produces = "text/plain;charset=utf-8")
-    public String insertBook(Locale locale,
+    @RequestMapping(value = "/updateBook", method = RequestMethod.POST)
+    public String updateBook(Locale locale,
             @RequestParam("title") String title,
             @RequestParam("author") String author,
             @RequestParam("publisher") String publisher,
@@ -59,8 +71,9 @@ public class AddBooksController {
             @RequestParam("publish_date") String publishDate,
             @RequestParam("isbn") String isbn,
             @RequestParam("description") String description,
+            @RequestParam("bookId") Integer bookId,
             Model model) {
-        logger.info("Welcome insertBooks.java! The client locale is {}.", locale);
+        logger.info("Welcome delete! The client locale is {}.", locale);
 
         BookDetailsInfo bookInfo = new BookDetailsInfo();
         
@@ -85,9 +98,9 @@ public class AddBooksController {
             flag = true;
         }
         if (flag) {
-            return "addBook";
+            return "editBook";
         }
-
+        
         // パラメータで受け取った書籍情報をDtoに格納する。
         bookInfo.setTitle(title);
         bookInfo.setAuthor(author);
@@ -95,6 +108,7 @@ public class AddBooksController {
         bookInfo.setPublish_date(publishDate);
         bookInfo.setIsbn(isbn);
         bookInfo.setDescription(description);
+        bookInfo.setBookId(bookId);
 
         // クライアントのファイルシステムにある元のファイル名を設定する
         String thumbnail = file.getOriginalFilename();
@@ -113,17 +127,17 @@ public class AddBooksController {
 
                 // 異常終了時の処理
                 logger.error("サムネイルアップロードでエラー発生", e);
-                model.addAttribute("bookDetailsInfo", bookInfo);
-                return "addBook";
+                model.addAttribute("bookInfo", bookInfo);
+                return "editBook";
             }
         }
 
-        // 書籍情報を新規登録する
-        booksService.registBook(bookInfo);
+        // 書籍情報の編集
+        booksService.updateBook(bookInfo);
 
-        // TODO 登録した書籍の詳細情報を表示するように実装
-        //  詳細画面に遷移する
-        model.addAttribute("bookDetailsInfo", booksService.getBookInfo(booksService.getBookId()));
+        model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
         return "details";
+
     }
+
 }
