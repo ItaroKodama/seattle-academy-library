@@ -38,13 +38,11 @@
                         <c:if test="${bookDetailsInfo.thumbnailUrl != 'null'}">
                             <a href="${bookDetailsInfo.thumbnailUrl}" data-lightbox="image-1">                           
                             	<img class="book_noimg" src="${bookDetailsInfo.thumbnailUrl}" alt="NO IMAFE">
-                                <input type="hidden" name="bookId" value="${bookDetailsInfo.bookId}">
                             </a>
                         </c:if>
                         <c:if test="${bookDetailsInfo.thumbnailUrl == 'null'}">
                             <a href="resources/img/noImg.png" data-lightbox="image-1">
                                 <img class="book_noimg" src="resources/img/noImg.png">
-                                <input type="hidden" name="bookId" value="${bookDetailsInfo.bookId}">
                             </a>
                         </c:if>
                      </div>
