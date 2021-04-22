@@ -80,7 +80,7 @@ public class EditBookController {
         //出版日とISBNのバリデーションチェック
         boolean flag = false;
         if (!(publishDate.matches("[0-9]{8}"))) {
-            model.addAttribute("notDateError", "出版日はYYYYMMDDの形式で入力してください1");
+            model.addAttribute("notDateError", "出版日はYYYYMMDDの形式で入力してください");
             flag = true;
         } else {
             try {
@@ -88,7 +88,7 @@ public class EditBookController {
                 df.setLenient(false);
                 df.parse(publishDate); // df.parseでParseExceptionがThrowされる                
             } catch (ParseException p) {
-                model.addAttribute("notDateError", "出版日はYYYYMMDDの形式で入力してください2");
+                model.addAttribute("notDateError", "出版日はYYYYMMDDの形式で入力してください");
                 flag = true;
                 p.printStackTrace();
             }
