@@ -27,10 +27,10 @@
     <main>
         <h1>Home</h1>
         <a href="<%= request.getContextPath()%>/addBook" class="btn_add_book">書籍の追加</a>
-		<div><br>${noBook}</div>
+        <a href="<%= request.getContextPath()%>/addBooksBulk" class="btn_bulk_book">一括登録</a>
         <div class="content_body">
-            <c:if test="${!empty resultMessage}">
-                <div class="error_msg">${resultMessage}</div>
+            <c:if test="${!empty noBook}">
+                <div class="error_msg">${noBook}</div>
             </c:if>
             <div>
                 <div class="booklist">
@@ -49,7 +49,7 @@
                             </form>
                             <ul>
                                 <li class="book_title">${bookInfo.title}</li>
-                                <li class="book_author">${bookInfo.author}</li>
+                                <li class="book_author">${bookInfo.author}（著）</li>
                                 <li class="book_publisher">出版社：${bookInfo.publisher}</li>
                                 <li class="book_publish_date">出版日：${bookInfo.publishDate}</li>
                             </ul>
