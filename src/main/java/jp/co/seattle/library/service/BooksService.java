@@ -54,6 +54,8 @@ public class BooksService {
 
         BookDetailsInfo bookDetailsInfo = jdbcTemplate.queryForObject(sql, new BookDetailsInfoRowMapper());
 
+        bookDetailsInfo.setBorrowing(isBorrowing(bookId));
+
         return bookDetailsInfo;
     }
 

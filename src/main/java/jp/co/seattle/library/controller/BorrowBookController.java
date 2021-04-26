@@ -32,15 +32,15 @@ public class BorrowBookController {
             Model model) {
         logger.info("Welcome borrowBooks.java! The client locale is {}.", locale);
 
-        model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
-
         if (booksService.isBorrowing(bookId)) {
+            model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
             model.addAttribute("borrowingMessage", "この書籍は貸し出し中です。");
             return "details";
         }
 
         booksService.borrowBook(bookId);
 
+        model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
         return "details";
     }
 

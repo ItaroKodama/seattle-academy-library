@@ -42,6 +42,14 @@
                         </c:if> <input type="hidden" name="bookId" value="${bookDetailsInfo.bookId}">
                     </a>
                 </div>
+                <c:choose>
+                    <c:when test="${bookDetailsInfo.borrowing}">
+                        <p>貸し出し中</p>
+                    </c:when>
+                    <c:otherwise>
+                        <p>貸し出し可</p>
+                    </c:otherwise>
+                </c:choose>
             </div>
             <div class="content_right">
                 <div>
