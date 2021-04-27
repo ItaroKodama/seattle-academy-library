@@ -1,6 +1,9 @@
 package jp.co.seattle.library.service;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
@@ -14,6 +17,8 @@ import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.ObjectWriteResponse;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
+import io.minio.errors.MinioException;
 import io.minio.http.Method;
 import jp.co.seattle.library.config.MinioConfig;
 
@@ -81,4 +86,19 @@ public class ThumbnailService {
 
     }
 
+    public void deleteThumbnail(String fileName) {
+        try {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder().bucket(minioConfig.getMinioInfo("s3.bucket-name"))
+                            .object(S3_OBJECT_THUMBNAILS + fileName).build());
+        } catch (MinioException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+    }
 }

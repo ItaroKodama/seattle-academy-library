@@ -132,6 +132,9 @@ public class EditBookController {
             }
         }
 
+        //古いサムネイルをminioから削除
+        thumbnailService.deleteThumbnail(booksService.getBookInfo(bookId).getThumbnailName());
+
         // 書籍情報の編集
         booksService.updateBook(bookInfo);
 
