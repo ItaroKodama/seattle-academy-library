@@ -35,12 +35,14 @@
             <div class="content_left">
                 <span>書籍の画像</span>
                 <div class="book_thumnail">
-                    <a href="${bookDetailsInfo.thumbnailUrl}" data-lightbox="image-1"> <c:if test="${empty bookDetailsInfo.thumbnailUrl}">
-                            <img class="book_noimg" src="resources/img/noImg.png" alt="NO IMAGE">
-                        </c:if> <c:if test="${!empty bookDetailsInfo.thumbnailUrl}">
-                            <img class="book_noimg" src="${bookDetailsInfo.thumbnailUrl}" alt="NO IMAFE">
-                        </c:if> <input type="hidden" name="bookId" value="${bookDetailsInfo.bookId}">
-                    </a>
+                    <c:if test="${bookDetailsInfo.thumbnailUrl != 'null'}">
+                        <a href="${bookDetailsInfo.thumbnailUrl}" data-lightbox="image-1"> <img class="book_noimg" src="${bookDetailsInfo.thumbnailUrl}" alt="NO IMAFE">
+                        </a>
+                    </c:if>
+                    <c:if test="${bookDetailsInfo.thumbnailUrl == 'null'}">
+                        <a href="resources/img/noImg.png" data-lightbox="image-1"> <img class="book_noimg" src="resources/img/noImg.png">
+                        </a>
+                    </c:if>
                 </div>
                 <c:choose>
                     <c:when test="${bookDetailsInfo.borrowing}">
