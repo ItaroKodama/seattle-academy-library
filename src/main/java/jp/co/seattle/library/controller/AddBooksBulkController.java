@@ -1,5 +1,6 @@
 package jp.co.seattle.library.controller;
 
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,6 +37,11 @@ public class AddBooksBulkController {
     @Autowired
     private BooksService booksService;
 
+    /**
+     * 一括登録画面遷移
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/addBooksBulk", method = RequestMethod.GET) //value＝actionで指定したパラメータ
     //RequestParamでname属性を取得
     public String insertBooksBulk(Model model) {
@@ -55,6 +61,11 @@ public class AddBooksBulkController {
             @RequestParam("csvFile") MultipartFile file,
             Model model) {
         logger.info("Welcome insertBooksBulk.java! The client locale is {}.", locale);
+
+        if (file.isEmpty()) {
+            model.addAttribute("errorMessage", "ファイルが選択されていません。");
+            return "addBooksBulk";
+        }
 
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));) {
