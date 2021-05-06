@@ -30,6 +30,8 @@
         <h1>Home</h1>
         <div class=btn_list>
             <a href="<%=request.getContextPath()%>/addBook" class="btn_add_book">書籍の追加</a>
+            <a href="<%=request.getContextPath()%>/addBooksBulk" class="btn_bulk_book">一括登録</a>
+            <button class="open btn_search_book">書籍の検索</button>
             <!--Creates the popup body-->
             <div class="popup_overlay">
                 <!--Creates the popup content-->
@@ -37,16 +39,28 @@
                     <h2>書籍の検索</h2>
                     <form action="<%=request.getContextPath()%>/searchBooks" method="post" enctype="multipart/form-data" id="data_upload_form">
                         <div class="search_item">
-                            <span>書籍名：</span> <input type="radio" name="titleMatching" value="true" checked>部分一致 <input type="radio" name="titleMatching" value="false">完全一致 <input type="text" name="searchTitle" class="search_word">
+                            <span>書籍名：</span>
+                            <input type="radio" name="titleMatching" value="true" checked>部分一致
+                            <input type="radio" name="titleMatching" value="false">完全一致
+                            <input type="text" name="searchTitle" class="search_word">
                         </div>
                         <div class="search_item">
-                            <span>著者名：</span> <input type="radio" name="authorMatching" value="true" checked>部分一致 <input type="radio" name="authorMatching" value="false">完全一致 <input type="text" name="searchAuthor" class="search_word">
+                            <span>著者名：</span>
+                            <input type="radio" name="authorMatching" value="true" checked>部分一致
+                            <input type="radio" name="authorMatching" value="false">完全一致
+                            <input type="text" name="searchAuthor" class="search_word">
                         </div>
                         <div class="search_item">
-                            <span>出版社：</span> <input type="radio" name="publisherMatching" value="true" checked>部分一致 <input type="radio" name="publisherMatching" value="false">完全一致 <input type="text" name="searchPublisher" class="search_word">
+                            <span>出版社：</span>
+                            <input type="radio" name="publisherMatching" value="true" checked>部分一致
+                            <input type="radio" name="publisherMatching" value="false">完全一致
+                            <input type="text" name="searchPublisher" class="search_word">
                         </div>
                         <div class="search_item">
-                            <span>出版日：</span> <input type="radio" name="publishDateMatching" value="true" checked>部分一致 <input type="radio" name="publishDateMatching" value="false">完全一致 <input type="text" name="searchPublishDate" class="search_word">
+                            <span>出版日：</span>
+                            <input type="radio" name="publishDateMatching" value="true" checked>部分一致
+                            <input type="radio" name="publishDateMatching" value="false">完全一致
+                            <input type="text" name="searchPublishDate" class="search_word">
                         </div>
                         <div class="addBookBtn_box">
                             <button type="submit" id="add-btn" class="btn_addBook">検索</button>
@@ -55,9 +69,7 @@
                     <!--popup's close button-->
                     <button class="close">Close</button>
                 </div>
-            </div>
-            <!--Content shown when popup is not displayed-->
-            <button class="open btn_search_book">書籍の検索</button>
+            </div>            
         </div>
         <div class="content_body">
             <div class="result_message">
@@ -73,9 +85,9 @@
                 <c:forEach var="bookInfo" items="${bookList}">
                     <div class="books">
                         <form method="post" class="book_thumnail" action="<%=request.getContextPath()%>/details">
-                            <a href="javascript:void(0)" onclick="this.parentNode.submit();"> <c:if test="${empty bookInfo.thumbnail}">
+                            <a href="javascript:void(0)" onclick="this.parentNode.submit();"> <c:if test="${bookInfo.thumbnail == 'null'}">
                                     <img class="book_noimg" src="resources/img/noImg.png">
-                                </c:if> <c:if test="${!empty bookInfo.thumbnail}">
+                                </c:if> <c:if test="${bookInfo.thumbnail != 'null'}">
                                     <img class="book_noimg" src="${bookInfo.thumbnail}" alt="NO IMAGE">
                                 </c:if>
                             </a> <input type="hidden" name="bookId" value="${bookInfo.bookId}">
