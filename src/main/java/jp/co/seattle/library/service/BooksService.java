@@ -115,4 +115,60 @@ public class BooksService {
 
         jdbcTemplate.update(sql);
     }
+
+    /**
+     * 書籍を部分一致または完全一致で検索
+     * @param isTitleSearchPartial 部分一致ならtrue
+     * @param titleSearchWord
+     * @param isAuthorSearchPartial 部分一致ならtrue
+     * @param authorSearchWord
+     * @param isPublisherSearchPartial 部分一致ならtrue
+     * @param publisherSearchWord
+     * @param isPublishDateSearchPartial 部分一致ならtrue
+     * @param publishDateSearchWord
+     * @return 検索で取得した書籍情報
+     */
+    public List<BookInfo> searchBooks(boolean isTitleSearchPartial, String titleSearchWord, boolean isAuthorSearchPartial,
+            String authorSearchWord, boolean isPublisherSearchPartial, String publisherSearchWord,
+            boolean isPublishDateSearchPartial, String publishDateSearchWord) {
+
+        //部分一致の場合は'='をlikeにし、検索ワードの前後を'%'で囲む
+        String isTitlePartial = "";
+        String isTitleLike = "=";
+        String isAuthorPartial = "";
+        String isAuthorLike = "=";
+        String isPublisherPartial = "";
+        String isPublisherLike = "=";
+        String isPublishDatePartial = "";
+        String isPublishDateLike = "=";
+        if (isTitleSearchPartial || titleSearchWord.isEmpty()) {
+            isTitlePartial = "%";
+            isTitleLike = "like";
+        }
+        if (isAuthorSearchPartial || authorSearchWord.isEmpty()) {
+            isAuthorPartial = "%";
+            isAuthorLike = "like";
+        }
+        if (isPublisherSearchPartial || publisherSearchWord.isEmpty()) {
+            isPublisherPartial = "%";
+            isPublisherLike = "like";
+        }
+        if (isPublishDateSearchPartial || publishDateSearchWord.isEmpty()) {
+            isPublishDatePartial = "%";
+            isPublishDateLike = "like";
+        }
+
+        String sql = "select id,title,author,publisher,publish_date,thumbnail_url from books where "
+                + "title " + isTitleLike + " '"
+                + isTitlePartial + titleSearchWord + isTitlePartial
+                + "' and author " + isAuthorLike + " '"
+                + isAuthorPartial + authorSearchWord + isAuthorPartial
+                + "' and publisher " + isPublisherLike + " '"
+                + isPublisherPartial + publisherSearchWord + isPublisherPartial
+                + "' and publish_date " + isPublishDateLike + " '"
+                + isPublishDatePartial + publishDateSearchWord + isPublishDatePartial
+                + "' order by TITLE asc";
+
+        return jdbcTemplate.query(sql, new BookInfoRowMapper());
+    }
 }
