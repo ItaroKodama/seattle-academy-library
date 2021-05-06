@@ -80,17 +80,14 @@ public class AddBooksBulkController {
             while ((line = br.readLine()) != null) {
                 int i = 0;
                 String[] bookData = new String[6];
-                String tmpMessage = ""; //エラーメッセージ用の一時変数
-
-                fileRow++;
+                String tmpMessage = ""; //エラーメッセージ用の一時変数   
 
                 //各行のデータを,毎に区切りbookListに格納
                 for (String tmpData : line.split(",")) {
                     bookData[i] = tmpData;
                     i++;
                 }
-                bookList.add(fileRow - 1, bookData);
-
+                bookList.add(fileRow, bookData);
 
                 //bookData[0]-[3]は必須、[4][5]は任意
                 if (bookData[0].isEmpty() || bookData[1].isEmpty() || bookData[2].isEmpty() || bookData[3].isEmpty()) {
@@ -123,11 +120,12 @@ public class AddBooksBulkController {
 
                 //エラーがある場合はerrorMessageにエラーメッセージを追加、ない場合はnull
                 if (tmpMessage != "") {
-                    errorMessage.add(fileRow - 1, fileRow + "行目：" + tmpMessage);
+                    errorMessage.add(fileRow, (fileRow + 1) + "行目：" + tmpMessage);
                 } else {
-                    errorMessage.add(fileRow - 1, "null");
+                    errorMessage.add(fileRow, "null");
                 }
 
+                fileRow++;
             }
 
             if (flag) {
