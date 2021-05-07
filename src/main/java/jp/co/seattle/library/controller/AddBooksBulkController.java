@@ -1,5 +1,6 @@
 package jp.co.seattle.library.controller;
 
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,6 +37,11 @@ public class AddBooksBulkController {
     @Autowired
     private BooksService booksService;
 
+    /**
+     * 一括登録画面遷移
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/addBooksBulk", method = RequestMethod.GET) //value＝actionで指定したパラメータ
     //RequestParamでname属性を取得
     public String insertBooksBulk(Model model) {
@@ -56,6 +62,11 @@ public class AddBooksBulkController {
             Model model) {
         logger.info("Welcome insertBooksBulk.java! The client locale is {}.", locale);
 
+        if (file.isEmpty()) {
+            model.addAttribute("errorMessage", "ファイルが選択されていません。");
+            return "addBooksBulk";
+        }
+
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));) {
 
@@ -69,17 +80,14 @@ public class AddBooksBulkController {
             while ((line = br.readLine()) != null) {
                 int i = 0;
                 String[] bookData = new String[6];
-                String tmpMessage = ""; //エラーメッセージ用の一時変数
-
-                fileRow++;
+                String tmpMessage = ""; //エラーメッセージ用の一時変数   
 
                 //各行のデータを,毎に区切りbookListに格納
                 for (String tmpData : line.split(",")) {
                     bookData[i] = tmpData;
                     i++;
                 }
-                bookList.add(fileRow - 1, bookData);
-
+                bookList.add(fileRow, bookData);
 
                 //bookData[0]-[3]は必須、[4][5]は任意
                 if (bookData[0].isEmpty() || bookData[1].isEmpty() || bookData[2].isEmpty() || bookData[3].isEmpty()) {
@@ -112,11 +120,12 @@ public class AddBooksBulkController {
 
                 //エラーがある場合はerrorMessageにエラーメッセージを追加、ない場合はnull
                 if (tmpMessage != "") {
-                    errorMessage.add(fileRow - 1, fileRow + "行目：" + tmpMessage);
+                    errorMessage.add(fileRow, (fileRow + 1) + "行目：" + tmpMessage);
                 } else {
-                    errorMessage.add(fileRow - 1, "null");
+                    errorMessage.add(fileRow, "null");
                 }
 
+                fileRow++;
             }
 
             if (flag) {

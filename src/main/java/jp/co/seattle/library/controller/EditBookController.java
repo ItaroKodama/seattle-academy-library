@@ -130,6 +130,9 @@ public class EditBookController {
                 model.addAttribute("bookInfo", bookInfo);
                 return "editBook";
             }
+        }else {
+            bookInfo.setThumbnailUrl(booksService.getBookInfo(bookId).getThumbnailUrl());
+            bookInfo.setThumbnailName(booksService.getBookInfo(bookId).getThumbnailName());
         }
 
         //古いサムネイルをminioから削除

@@ -24,6 +24,7 @@ public class DeleteBookController {
 
     @Autowired
     private BooksService booksService;
+
     @Autowired
     private ThumbnailService thumbnailService;
 
@@ -43,8 +44,16 @@ public class DeleteBookController {
             Model model) {
         logger.info("Welcome delete! The client locale is {}.", locale);
 
-        // minioからサムネイルファイルを削除、booksテーブルから該当の書籍データを削除
+        // 貸し出し中でなければbooksテーブルから該当の書籍データを削除
+        if (booksService.isBorrowing(bookId)) {
+            model.addAttribute("borrowingMessage", "この書籍は貸し出し中です。削除できません。");
+            model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
+            return "details";
+        }
+
+        //minioからサムネイルファイルを削除、booksテーブルから該当の書籍データを削除
         thumbnailService.deleteThumbnail(booksService.getBookInfo(bookId).getThumbnailName());
+
         booksService.deleteBook(bookId);
 
         if (booksService.getBookList().isEmpty()) {
