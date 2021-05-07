@@ -5,7 +5,6 @@ import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -24,9 +23,6 @@ public class DeleteBookController {
 
     @Autowired
     private BooksService booksService;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
 
     /**
      * 対象書籍を削除する
@@ -44,7 +40,12 @@ public class DeleteBookController {
             Model model) {
         logger.info("Welcome delete! The client locale is {}.", locale);
 
-        // booksテーブルから該当の書籍データを削除
+        // 貸し出し中でなければbooksテーブルから該当の書籍データを削除
+        if (booksService.isBorrowing(bookId)) {
+            model.addAttribute("borrowingMessage", "この書籍は貸し出し中です。削除できません。");
+            model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
+            return "details";
+        }
         booksService.deleteBook(bookId);
 
         if (booksService.getBookList().isEmpty()) {

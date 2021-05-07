@@ -104,7 +104,7 @@ input[type=button].primary {
 }
 /* 入力フォームのパーツ：エラーメッセージ */
 .error {
-    display: block;
+    display: inline-block;
     margin: 10px 0;
     padding: 10px;
     font-weight: bold;
@@ -275,4 +275,7 @@ h1 {
 .error_msg {
     color: red;
     font-weight: bold;
+}
+.center{
+	text-align:center;
 }
