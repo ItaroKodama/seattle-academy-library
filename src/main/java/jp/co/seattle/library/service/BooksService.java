@@ -133,11 +133,19 @@ public class BooksService {
         }
     }
 
+    /**
+     * 書籍を貸し出しテーブルに追加
+     * @param bookId 貸し出し書籍のID
+     */
     public void borrowBook(int bookId) {
         String sql = "insert into borrowing (book_id) values (" + bookId + ")";
         jdbcTemplate.update(sql);
     }
 
+    /**
+     * 書籍を貸し出しテーブルから削除
+     * @param bookId 返却書籍のID
+     */
     public void returnBook(int bookId) {
         jdbcTemplate.update("delete from borrowing where book_id =" + bookId);
     }
