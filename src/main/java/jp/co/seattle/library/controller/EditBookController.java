@@ -1,9 +1,6 @@
 package jp.co.seattle.library.controller;
 
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import org.slf4j.Logger;
@@ -20,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jp.co.seattle.library.dto.BookDetailsInfo;
 import jp.co.seattle.library.service.BooksService;
 import jp.co.seattle.library.service.ThumbnailService;
+import jp.co.seattle.library.service.ValidationCheck;
 
 /**
  * 編集コントローラー
@@ -33,6 +31,9 @@ public class EditBookController {
 
     @Autowired
     private ThumbnailService thumbnailService;
+
+    @Autowired
+    private ValidationCheck validationCheck;
 
     /**
      * 詳細画面で編集ボタンを押下した時に書籍編集画面に遷移する
@@ -76,61 +77,38 @@ public class EditBookController {
         logger.info("Welcome delete! The client locale is {}.", locale);
 
         BookDetailsInfo bookInfo = new BookDetailsInfo();
-        
-        //出版日とISBNのバリデーションチェック
-        boolean flag = false;
-        if (!(publishDate.matches("[0-9]{8}"))) {
-            model.addAttribute("notDateError", "出版日はYYYYMMDDの形式で入力してください");
-            flag = true;
-        } else {
-            try {
-                DateFormat df = new SimpleDateFormat("yyyyMMdd");
-                df.setLenient(false);
-                df.parse(publishDate); // df.parseでParseExceptionがThrowされる                
-            } catch (ParseException p) {
-                model.addAttribute("notDateError", "出版日はYYYYMMDDの形式で入力してください");
-                flag = true;
-                p.printStackTrace();
-            }
-        }
-        if (!(isbn.matches("([0-9]{10}|[0-9]{13})?"))) {
-            model.addAttribute("notISBNError", "ISBNは10桁もしくは13桁の数字で入力してください");
-            flag = true;
-        }
-        if (flag) {
-            return "editBook";
-        }
-        
         // パラメータで受け取った書籍情報をDtoに格納する。
         bookInfo.setTitle(title);
         bookInfo.setAuthor(author);
         bookInfo.setPublisher(publisher);
         bookInfo.setPublish_date(publishDate);
-        bookInfo.setIsbn(isbn);
-        bookInfo.setDescription(description);
         bookInfo.setBookId(bookId);
+        
+        //出版日とISBNのバリデーションチェック
+        String[] errorMsg = validationCheck.validationCheck(publishDate, isbn);
+        boolean flag = false;
+        if (errorMsg[0] != null) {
+            model.addAttribute("notDateError", errorMsg[0]);
+            flag = true;
+        } else {
+            bookInfo.setPublish_date(publishDate);
+        }
+        if (errorMsg[1] != null) {
+            model.addAttribute("notISBNError", errorMsg[1]);
+            flag = true;
+        } else {
+            bookInfo.setIsbn(isbn);
+        }
+        if (flag) {
+            model.addAttribute("bookDetailsInfo", bookInfo);
+            return "editBook";
+        }
 
-        // クライアントのファイルシステムにある元のファイル名を設定する
-        String thumbnail = file.getOriginalFilename();
-
-        if (!file.isEmpty()) {
-            try {
-                // サムネイル画像をアップロード
-                String fileName = thumbnailService.uploadThumbnail(thumbnail, file);
-                // URLを取得
-                String thumbnailUrl = thumbnailService.getURL(fileName);
-
-                bookInfo.setThumbnailName(fileName);
-                bookInfo.setThumbnailUrl(thumbnailUrl);
-
-            } catch (Exception e) {
-
-                // 異常終了時の処理
-                logger.error("サムネイルアップロードでエラー発生", e);
-                model.addAttribute("bookInfo", bookInfo);
-                return "editBook";
-            }
-        }else {
+        // サムネイル画像をアップロード
+        if (!thumbnailService.uploadThumbnail(file, bookInfo)) {
+            model.addAttribute("bookDetailsInfo", bookInfo);
+            return "editBook";
+        } else {
             bookInfo.setThumbnailUrl(booksService.getBookInfo(bookId).getThumbnailUrl());
             bookInfo.setThumbnailName(booksService.getBookInfo(bookId).getThumbnailName());
         }
@@ -140,7 +118,5 @@ public class EditBookController {
 
         model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
         return "details";
-
     }
-
 }
