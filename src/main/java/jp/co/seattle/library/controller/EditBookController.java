@@ -50,7 +50,7 @@ public class EditBookController {
             Model model) {
         logger.info("Welcome delete! The client locale is {}.", locale);
 
-        model.addAttribute("bookInfo", booksService.getBookInfo(bookId));
+        model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
         return "editBook";
     }
 
@@ -81,7 +81,7 @@ public class EditBookController {
         bookInfo.setTitle(title);
         bookInfo.setAuthor(author);
         bookInfo.setPublisher(publisher);
-        bookInfo.setPublish_date(publishDate);
+        bookInfo.setDescription(description);
         bookInfo.setBookId(bookId);
         
         //出版日とISBNのバリデーションチェック
