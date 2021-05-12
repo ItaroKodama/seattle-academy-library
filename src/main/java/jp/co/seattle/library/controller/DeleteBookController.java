@@ -26,7 +26,6 @@ public class DeleteBookController {
 
     /**
      * 対象書籍を削除する
-     *
      * @param locale ロケール情報
      * @param bookId 書籍ID
      * @param model モデル情報
@@ -54,7 +53,42 @@ public class DeleteBookController {
             model.addAttribute("bookList", booksService.getBookList());
         }
         return "home";
-
     }
+
+    /**
+     * 選択した書籍を一括削除
+     * @param locale
+     * @param bookIds 削除したい書籍のリスト
+     * @param model
+     * @return ホーム画面に遷移
+     */
+    @Transactional
+    @RequestMapping(value = "/deleteBooksBulk", method = RequestMethod.POST)
+    public String deleteBooksBulk(
+            Locale locale,
+            @RequestParam("deleteBookList") Integer[] bookIds,
+            Model model) {
+        logger.info("Welcome deleteBulk! The client locale is {}.", locale);
+
+        int deleteBooksNum = bookIds.length; //削除する書籍の冊数
+        for (int bookId : bookIds) {
+            if (!booksService.isBorrowing(bookId)) {
+                booksService.deleteBook(bookId);
+            }
+            if (booksService.isBorrowing(bookId)) {
+                deleteBooksNum -= 1;
+                model.addAttribute("cannotDelete", "貸し出し中の書籍は削除されません");
+            }
+        }
+
+        if (booksService.getBookList().isEmpty()) {
+            model.addAttribute("noBook", "書籍データがありません");
+        } else {
+            model.addAttribute("bookList", booksService.getBookList());
+            model.addAttribute("deleteMessage", deleteBooksNum + "冊の書籍を削除しました");
+        }
+        return "home";
+    }
+
 
 }

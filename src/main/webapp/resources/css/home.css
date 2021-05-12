@@ -101,6 +101,7 @@ input {
     display: inline-block;
     margin-right: 10px;
     line-height: 1.5;
+    margin-bottom: 50px;
 }
 .book_thumnail {
     position: relative;
