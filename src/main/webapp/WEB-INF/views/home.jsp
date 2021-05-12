@@ -21,14 +21,14 @@
         </div>
         <div class="right">
             <ul>
-                <li><a href=" <%=request.getContextPath()%>/home" class="menu">Home</a></li>
-                <li><a href=" <%=request.getContextPath()%>/">ログアウト</a></li>
+                <li><a href="<%= request.getContextPath()%>/home" class="menu">Home</a></li>
+                <li><a href="<%= request.getContextPath()%>/">ログアウト</a></li>
             </ul>
         </div>
     </header>
     <main>
         <h1>Home</h1>
-        <a href="<%= request.getContextPath()%>/addBook" class="btn_add_book">書籍の追加</a> 
+        <a href="<%= request.getContextPath()%>/addBook" class="btn_add_book">書籍の追加</a>
         <a href="<%= request.getContextPath()%>/addBooksBulk" class="btn_bulk_book">一括登録</a>
         <form action="<%=request.getContextPath()%>/deleteBooksBulk" method="post" enctype="multipart/form-data" id="data_upload_form">
             <button type="submit" class="btn_delete_book">書籍の削除</button>
@@ -53,10 +53,11 @@
                                 <a href="javascript:void(0)" onclick="this.parentNode.submit();">
                                     <c:if test="${bookInfo.thumbnail == 'null'}">
                                         <img class="book_noimg" src="resources/img/noImg.png">
-                                    </c:if> <c:if test="${bookInfo.thumbnail != 'null'}">
+                                    </c:if> 
+                                    <c:if test="${bookInfo.thumbnail != 'null'}">
                                         <img class="book_noimg" src="${bookInfo.thumbnail}" alt="NO IMAGE">
                                     </c:if>
-                                </a> 
+                                </a>
                                 <input type="hidden" name="bookId" value="${bookInfo.bookId}">
                             </form>
                             <ul>
