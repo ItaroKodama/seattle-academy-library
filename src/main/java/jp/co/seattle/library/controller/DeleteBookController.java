@@ -89,6 +89,4 @@ public class DeleteBookController {
         }
         return "home";
     }
-
-
 }
