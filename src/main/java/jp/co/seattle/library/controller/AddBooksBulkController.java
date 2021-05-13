@@ -62,9 +62,14 @@ public class AddBooksBulkController {
             Model model) {
         logger.info("Welcome insertBooksBulk.java! The client locale is {}.", locale);
 
+        if (file.isEmpty()) {
+            model.addAttribute("errorMessage", "ファイルに書籍情報がありません");
+            return "addBooksBulk";
+        }
+
         List<String> errorMessage = new ArrayList<String>();
         //書籍情報をリストに追加
-        List<String[]> bookList = readCsvFile(file, errorMessage);
+        List<BookDetailsInfo> bookList = readCsvFile(file, errorMessage);
 
         //エラーがある際は一括登録画面にエラーメッセージを表示
         if (errorMessage.size() != 0) {
@@ -74,14 +79,7 @@ public class AddBooksBulkController {
 
         // 書籍情報を新規登録する
         for (int i = 0; i < bookList.size(); i++) {
-            BookDetailsInfo bookInfo = new BookDetailsInfo();
-            bookInfo.setTitle(bookList.get(i)[0]);
-            bookInfo.setAuthor(bookList.get(i)[1]);
-            bookInfo.setPublisher(bookList.get(i)[2]);
-            bookInfo.setPublish_date(bookList.get(i)[3]);
-            bookInfo.setIsbn(bookList.get(i)[4]);
-            bookInfo.setDescription(bookList.get(i)[5]);
-
+            BookDetailsInfo bookInfo = bookList.get(i);
             booksService.registBook(bookInfo);
         }
 
@@ -95,8 +93,8 @@ public class AddBooksBulkController {
      * @param errorMessage エラーメッセージ格納ようのリスト
      * @return csvファイルから読み込んだ書籍情報
      */
-    private List<String[]> readCsvFile(MultipartFile file, List<String> errorMessage) {
-        List<String[]> bookList = new ArrayList<String[]>();
+    private List<BookDetailsInfo> readCsvFile(MultipartFile file, List<String> errorMessage) {
+        List<BookDetailsInfo> bookList = new ArrayList<BookDetailsInfo>();
 
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));) {
@@ -104,25 +102,21 @@ public class AddBooksBulkController {
             String line;
             // 一行ずつ読み出してList<String[]>型のbookListに格納
             while ((line = br.readLine()) != null) {
-                String tmpMessage = null; //エラーメッセージ用の一時変数   
+                //各行のデータを,毎に区切りbookListに格納  
+                BookDetailsInfo bookInfo = new BookDetailsInfo();
+                bookInfo.setTitle(line.split(",", -1)[0]);
+                bookInfo.setAuthor(line.split(",", -1)[1]);
+                bookInfo.setPublisher(line.split(",", -1)[2]);
+                bookInfo.setPublish_date(line.split(",", -1)[3]);
+                bookInfo.setIsbn(line.split(",", -1)[4]);
+                bookInfo.setDescription(line.split(",", -1)[5]);
+                bookList.add(bookInfo);
 
-                //各行のデータを,毎に区切りbookListに格納        
-                String[] bookData = line.split(",", -1);
-                bookList.add(bookData);
-
-                //bookData[0]-[3]は必須、[4][5]は任意
-                if (bookData[0].isEmpty() || bookData[1].isEmpty() || bookData[2].isEmpty()
-                        || bookData[3].isEmpty()) {
-                    tmpMessage += "必要な情報がありません。";
-                }
-                //出版日とISBNのバリデーションチェック(bookData[3]=出版日、bookData[4]=ISBN)
-                String[] errorMsg = validationCheck.validationCheck(bookData[3], bookData[4]);
-                if (errorMsg[0] != null || errorMsg[1] != null) {
-                    tmpMessage += errorMsg[0] + errorMsg[1];
-                }
+                //必要情報とバリデーションのチェック
+                String tmpMessage = validationCheck.validationCheck(bookInfo);
 
                 //エラーがある場合はerrorMessageにエラーメッセージを追加、ない場合はnull
-                if (tmpMessage != null) {
+                if (!tmpMessage.isEmpty()) {
                     errorMessage.add(fileRow + "行目：" + tmpMessage);
                 }
                 fileRow++;

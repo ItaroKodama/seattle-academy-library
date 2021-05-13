@@ -1,6 +1,7 @@
 package jp.co.seattle.library.controller;
 
 
+import java.util.List;
 import java.util.Locale;
 
 import org.slf4j.Logger;
@@ -69,6 +70,8 @@ public class EditBookController {
             @RequestParam("author") String author,
             @RequestParam("publisher") String publisher,
             @RequestParam("thumbnail") MultipartFile file,
+            @RequestParam("thumbnailUrl") String thumbnailUrl,
+            @RequestParam("thumbnailName") String thumbnailName,
             @RequestParam("publish_date") String publishDate,
             @RequestParam("isbn") String isbn,
             @RequestParam("description") String description,
@@ -85,21 +88,18 @@ public class EditBookController {
         bookInfo.setBookId(bookId);
         
         //出版日とISBNのバリデーションチェック
-        String[] errorMsg = validationCheck.validationCheck(publishDate, isbn);
-        boolean flag = false;
-        if (errorMsg[0] != null) {
-            model.addAttribute("notDateError", errorMsg[0]);
-            flag = true;
+        List<String> errorMsg = validationCheck.validationCheck(publishDate, isbn);
+        if (!errorMsg.get(0).isEmpty()) {
+            model.addAttribute("notDateError", errorMsg.get(0));
         } else {
             bookInfo.setPublish_date(publishDate);
         }
-        if (errorMsg[1] != null) {
-            model.addAttribute("notISBNError", errorMsg[1]);
-            flag = true;
+        if (!errorMsg.get(1).isEmpty()) {
+            model.addAttribute("notISBNError", errorMsg.get(1));
         } else {
             bookInfo.setIsbn(isbn);
         }
-        if (flag) {
+        if (!errorMsg.get(0).isEmpty() || !errorMsg.get(1).isEmpty()) {
             model.addAttribute("bookDetailsInfo", bookInfo);
             return "editBook";
         }
@@ -108,9 +108,11 @@ public class EditBookController {
         if (!thumbnailService.uploadThumbnail(file, bookInfo)) {
             model.addAttribute("bookDetailsInfo", bookInfo);
             return "editBook";
-        } else {
-            bookInfo.setThumbnailUrl(booksService.getBookInfo(bookId).getThumbnailUrl());
-            bookInfo.setThumbnailName(booksService.getBookInfo(bookId).getThumbnailName());
+        }
+        //サムネイル画像の変更がない場合の処理
+        if(!thumbnailUrl.isEmpty()) {
+            bookInfo.setThumbnailUrl(thumbnailUrl);
+            bookInfo.setThumbnailName(thumbnailName);
         }
 
         // 書籍情報の編集

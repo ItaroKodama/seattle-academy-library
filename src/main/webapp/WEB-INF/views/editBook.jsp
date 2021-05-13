@@ -49,6 +49,8 @@
                         </c:if>
                     </div>
                     <input type="file" accept="image/*" name="thumbnail" id="thumbnail">
+                    <input type="hidden" name="thumbnailUrl" value="${bookDetailsInfo.thumbnailUrl}">
+                    <input type="hidden" name="thumbnailName" value="${bookDetailsInfo.thumbnailName}">
                 </div>
                 <div class="content_right">
                     <div>

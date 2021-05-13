@@ -60,7 +60,7 @@
                     <div>
                         <span>書籍名</span><span class="care care2">必須</span>
                         <c:if test="${!empty bookDetailsInfo}">
-                            <input type="text" name="title" value="${bookDetailsInfo.title}">
+                            <input type="text" name="title" value="${bookDetailsInfo.title}" required>
                         </c:if>
                         <c:if test="${empty bookDetailsInfo}">
                             <input type="text" name="title" autocomplete="off" required>
@@ -69,7 +69,7 @@
                     <div>
                         <span>著者名</span><span class="care care2">必須</span>
                         <c:if test="${!empty bookDetailsInfo}">
-                            <input type="text" name="author" value="${bookDetailsInfo.author}">
+                            <input type="text" name="author" value="${bookDetailsInfo.author}" required>
                         </c:if>
                         <c:if test="${empty bookDetailsInfo}">
                             <input type="text" name="author" autocomplete="off" required>
@@ -78,7 +78,7 @@
                     <div>
                         <span>出版社</span><span class="care care2">必須</span>
                         <c:if test="${!empty bookDetailsInfo}">
-                            <input type="text" name="publisher" value="${bookDetailsInfo.publisher}">
+                            <input type="text" name="publisher" value="${bookDetailsInfo.publisher}" required>
                         </c:if>
                         <c:if test="${empty bookDetailsInfo}">
                             <input type="text" name="publisher" required>
@@ -90,7 +90,7 @@
                             <div class="error">${notDateError}</div>
                         </c:if>
                         <c:if test="${!empty bookDetailsInfo}">
-                            <input type="text" name="publish_date" value="${bookDetailsInfo.publish_date}">
+                            <input type="text" name="publish_date" value="${bookDetailsInfo.publish_date}" required>
                         </c:if>
                         <c:if test="${empty bookDetailsInfo}">
                             <input type="text" name="publish_date" required placeholder="YYYYMMDD">

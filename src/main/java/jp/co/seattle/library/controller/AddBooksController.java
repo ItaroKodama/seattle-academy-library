@@ -1,5 +1,6 @@
 package jp.co.seattle.library.controller;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.slf4j.Logger;
@@ -71,21 +72,18 @@ public class AddBooksController {
         bookInfo.setDescription(description);
       
         //出版日とISBNのバリデーションチェック
-        String[] errorMsg = validationCheck.validationCheck(publishDate, isbn);
-        boolean flag = false;
-        if (errorMsg[0] != null) {
-            model.addAttribute("notDateError", errorMsg[0]);
-            flag = true;
+        List<String> errorMsg = validationCheck.validationCheck(publishDate, isbn);
+        if (!errorMsg.get(0).isEmpty()) {
+            model.addAttribute("notDateError", errorMsg.get(0));
         } else {
             bookInfo.setPublish_date(publishDate);
         }
-        if(errorMsg[1] != null) {
-            model.addAttribute("notISBNError", errorMsg[1]);
-            flag = true;
+        if (!errorMsg.get(1).isEmpty()) {
+            model.addAttribute("notISBNError", errorMsg.get(1));
         } else {
             bookInfo.setIsbn(isbn);
         }
-        if (flag) {
+        if (!errorMsg.get(0).isEmpty() || !errorMsg.get(1).isEmpty()) {
             model.addAttribute("bookDetailsInfo", bookInfo);
             return "addBook";
         }
