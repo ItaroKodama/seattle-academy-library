@@ -104,16 +104,17 @@ public class EditBookController {
             return "editBook";
         }
 
+        //サムネイル画像の変更がない場合の処理
+        if (!thumbnailUrl.isEmpty()) {
+            bookInfo.setThumbnailUrl(thumbnailUrl);
+            bookInfo.setThumbnailName(thumbnailName);
+        }
         // サムネイル画像をアップロード
         if (!thumbnailService.uploadThumbnail(file, bookInfo)) {
             model.addAttribute("bookDetailsInfo", bookInfo);
             return "editBook";
         }
-        //サムネイル画像の変更がない場合の処理
-        if(!thumbnailUrl.isEmpty()) {
-            bookInfo.setThumbnailUrl(thumbnailUrl);
-            bookInfo.setThumbnailName(thumbnailName);
-        }
+
 
         // 書籍情報の編集
         booksService.updateBook(bookInfo);
