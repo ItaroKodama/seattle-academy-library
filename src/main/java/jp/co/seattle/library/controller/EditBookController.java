@@ -88,7 +88,8 @@ public class EditBookController {
         bookInfo.setBookId(bookId);
         
         //出版日とISBNのバリデーションチェック
-        List<String> errorMsg = validationCheck.validationCheck(publishDate, isbn);
+        List<String> errorMsg = validationCheck.validationCheck(publishDate, isbn, title, author, publisher,
+                description);
         if (!errorMsg.get(0).isEmpty()) {
             model.addAttribute("notDateError", errorMsg.get(0));
         } else {
@@ -99,7 +100,28 @@ public class EditBookController {
         } else {
             bookInfo.setIsbn(isbn);
         }
-        if (!errorMsg.get(0).isEmpty() || !errorMsg.get(1).isEmpty()) {
+        if (!errorMsg.get(2).isEmpty()) {
+            model.addAttribute("titleError", errorMsg.get(2));
+        } else {
+            bookInfo.setTitle(title);
+        }
+        if (!errorMsg.get(3).isEmpty()) {
+            model.addAttribute("authorError", errorMsg.get(3));
+        } else {
+            bookInfo.setAuthor(author);
+        }
+        if (!errorMsg.get(4).isEmpty()) {
+            model.addAttribute("publisherError", errorMsg.get(4));
+        } else {
+            bookInfo.setPublisher(publisher);
+        }
+        if (!errorMsg.get(5).isEmpty()) {
+            model.addAttribute("descriptionError", errorMsg.get(5));
+        } else {
+            bookInfo.setDescription(description);
+        }
+        if (!errorMsg.get(0).isEmpty() || !errorMsg.get(1).isEmpty() || !errorMsg.get(2).isEmpty()
+                || !errorMsg.get(3).isEmpty() || !errorMsg.get(4).isEmpty() || !errorMsg.get(5).isEmpty()) {
             model.addAttribute("bookDetailsInfo", bookInfo);
             return "editBook";
         }
@@ -114,7 +136,6 @@ public class EditBookController {
             model.addAttribute("bookDetailsInfo", bookInfo);
             return "editBook";
         }
-
 
         // 書籍情報の編集
         booksService.updateBook(bookInfo);

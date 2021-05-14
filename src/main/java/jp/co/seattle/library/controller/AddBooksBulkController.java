@@ -102,19 +102,23 @@ public class AddBooksBulkController {
             String line;
             // 一行ずつ読み出してList<String[]>型のbookListに格納
             while ((line = br.readLine()) != null) {
-                //各行のデータを,毎に区切りbookListに格納  
+                //各行のデータを,毎に区切りbookListに格納
                 BookDetailsInfo bookInfo = new BookDetailsInfo();
-                bookInfo.setTitle(line.split(",", -1)[0]);
-                bookInfo.setAuthor(line.split(",", -1)[1]);
-                bookInfo.setPublisher(line.split(",", -1)[2]);
-                bookInfo.setPublish_date(line.split(",", -1)[3]);
-                bookInfo.setIsbn(line.split(",", -1)[4]);
-                bookInfo.setDescription(line.split(",", -1)[5]);
-                bookList.add(bookInfo);
+                String tmpMessage = "";
+                if (line.split(",", -1).length != 6) {
+                    tmpMessage += "形式が間違っています。[,]を挿入してください。";
+                } else {
+                    bookInfo.setTitle(line.split(",", -1)[0]);
+                    bookInfo.setAuthor(line.split(",", -1)[1]);
+                    bookInfo.setPublisher(line.split(",", -1)[2]);
+                    bookInfo.setPublish_date(line.split(",", -1)[3]);
+                    bookInfo.setIsbn(line.split(",", -1)[4]);
+                    bookInfo.setDescription(line.split(",", -1)[5]);
+                    bookList.add(bookInfo);
 
-                //必要情報とバリデーションのチェック
-                String tmpMessage = validationCheck.validationCheck(bookInfo);
-
+                    //必要情報とバリデーションのチェック
+                    tmpMessage = validationCheck.validationCheck(bookInfo);
+                }
                 //エラーがある場合はerrorMessageにエラーメッセージを追加、ない場合はnull
                 if (!tmpMessage.isEmpty()) {
                     errorMessage.add(fileRow + "行目：" + tmpMessage);

@@ -55,6 +55,9 @@
                 <div class="content_right">
                     <div>
                         <span>書籍名</span><span class="care care2">必須</span>
+                        <c:if test="${!empty titleError}">
+                            <div class="error">${titleError}</div>
+                        </c:if>
                         <c:if test="${!empty bookDetailsInfo}">
                             <input type="text" name="title" value="${bookDetailsInfo.title}" required>
                         </c:if>
@@ -64,6 +67,9 @@
                     </div>
                     <div>
                         <span>著者名</span><span class="care care2">必須</span>
+                        <c:if test="${!empty authorError}">
+                            <div class="error">${authorError}</div>
+                        </c:if>
                         <c:if test="${!empty bookDetailsInfo}">
                             <input type="text" name="author" value="${bookDetailsInfo.author}" required>
                         </c:if>
@@ -73,6 +79,9 @@
                     </div>
                     <div>
                         <span>出版社</span><span class="care care2">必須</span>
+                        <c:if test="${!empty publisherError}">
+                            <div class="error">${publisherError}</div>
+                        </c:if>
                         <c:if test="${!empty bookDetailsInfo}">
                             <input type="text" name="publisher" value="${bookDetailsInfo.publisher}" required>
                         </c:if>
@@ -106,6 +115,9 @@
                     </div>
                     <div>
                         <span>説明文</span><span class="care care1">任意</span>
+                        <c:if test="${!empty descriptionError}">
+                            <div class="error">${descriptionError}</div>
+                        </c:if>
                         <c:if test="${!empty bookDetailsInfo}">
                             <input type="text" name="description" value="${bookDetailsInfo.description}">
                         </c:if>

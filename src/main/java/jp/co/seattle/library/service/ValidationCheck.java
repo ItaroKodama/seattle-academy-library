@@ -19,10 +19,16 @@ public class ValidationCheck {
      * @param isbn チェックするISBN
      * @return Listの１つ目に出版日のエラーメッセージ、２つ目にISBNのエラーメッセージ
      */
-    public List<String> validationCheck(String publishDate, String isbn) {
+    public List<String> validationCheck(String publishDate, String isbn, String title, String author, String publisher,
+            String description) {
         List<String> errorMsg = new ArrayList<String>();
         errorMsg.add(0, "");
         errorMsg.add(1, "");
+        errorMsg.add(2, "");
+        errorMsg.add(3, "");
+        errorMsg.add(4, "");
+        errorMsg.add(5, "");
+
         if (!(publishDate.matches("[0-9]{8}"))) {
             errorMsg.add(0, "出版日はYYYYMMDDの形式で入力してください");
         } else {
@@ -38,6 +44,20 @@ public class ValidationCheck {
         if (!(isbn.matches("([0-9]{10}|[0-9]{13})?"))) {
             errorMsg.add(1, "ISBNは10桁もしくは13桁の数字で入力してください");
         }
+
+        if (255 < title.length()) {
+            errorMsg.add(2, "書籍名は255文字以内で入力してください");
+        }
+        if (255 < author.length()) {
+            errorMsg.add(3, "著者名は255文字以内で入力してください");
+        }
+        if (255 < publisher.length()) {
+            errorMsg.add(4, "出版社は255文字以内で入力してください");
+        }
+        if (255 < description.length()) {
+            errorMsg.add(5, "説明文は255文字以内で入力してください");
+        }
+
         return errorMsg;
     }
 
@@ -67,6 +87,10 @@ public class ValidationCheck {
         }
         if (!(bookInfo.getIsbn().matches("([0-9]{10}|[0-9]{13})?"))) {
             errorMsg += "ISBNは10桁もしくは13桁の数字で入力してください。";
+        }
+        if (255 < bookInfo.getTitle().length() || 255 < bookInfo.getAuthor().length()
+                || 255 < bookInfo.getPublisher().length() || 255 < bookInfo.getDescription().length()) {
+            errorMsg += "書籍名、著者名、出版社、説明文は255文字以内で記述してください。";
         }
         return errorMsg;
     }
