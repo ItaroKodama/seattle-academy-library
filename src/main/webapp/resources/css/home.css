@@ -101,6 +101,7 @@ input {
     display: inline-block;
     margin-right: 10px;
     line-height: 1.5;
+    vertical-align: top;
 }
 .book_thumnail {
     position: relative;
@@ -128,16 +129,38 @@ img.book_noimg, img.book_img{
 .book_title {
     font-size: 16px;
     text-align: center;
+    width: 200px;
+    /* word-break: break-word; */
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .book_author {
     font-size: 13px;
     text-align: center;
     margin-bottom: 5px;
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    /* word-break: break-word; */
 }
 
 .book_publisher, .book_publish_date {
     font-size: 12px;
+    width: 200px;
+    display: flex;
+    /* word-break: break-word; */    
+}
+
+.book_publisher p{
+	max-width: 150px;
+}
+
+.wordOverflow{
+	white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 a.btn_add_book,a.btn_bulk_book, button.btn_addBook,button.btn_editBook, button.btn_deleteBook,button.btn_rentBook,button.btn_returnBook,button.btn_bulkRegist {
@@ -190,6 +213,7 @@ a:hover, button:hover {
     border-bottom: 1px solid #cccccc;
     margin: 5px 0 15px;
     font-size: 15px;
+     word-break: break-word;
 }
 .detail_book_content .content_left{
     width: 250px;
@@ -202,7 +226,7 @@ a:hover, button:hover {
     width: 99.2%;
     text-indent: 1em;
     vertical-align: middle;
-
+    word-break: break-word;
 }
 .content_right input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px #ffffff inset;
@@ -232,6 +256,11 @@ button.btn_addBook:focus, button.btn_editBook:focus, button.btn_deleteBook:focus
 }
 button.btn_addBook:hover, button.btn_editBook:hover, button.btn_deleteBook:hover,button.btn_rentBook:hover,button.btn_returnBook:hover,button.btn_bulkRegist:hover {
     cursor: pointer;
+}
+
+button.btn_deleteBook:disabled, button.btn_rentBook:disabled, button.btn_returnBook:disabled{
+	cursor: default;
+	opacity: 1;
 }
 
 hr.border_add {
