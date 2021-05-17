@@ -99,8 +99,7 @@ input {
 
 .books {
 	display: inline-block;
-	margin-right: 10px;
-	line-height: 1.5;
+  vertical-align: top;
 }
 
 .book_thumnail {
@@ -130,43 +129,57 @@ img.book_img {
 }
 
 .book_title {
-	font-size: 16px;
-	text-align: center;
+    font-size: 16px;
+    text-align: center;
+    width: 200px;
+    /* word-break: break-word; */
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .book_author {
-	font-size: 13px;
-	text-align: center;
-	margin-bottom: 5px;
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 5px;
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    /* word-break: break-word; */
 }
 
 .book_publisher, .book_publish_date {
-	font-size: 12px;
+    font-size: 12px;
+    width: 200px;
+    display: flex;
+    /* word-break: break-word; */    
 }
 
-a.btn_add_book, a.btn_bulk_book, button.btn_addBook, button.btn_editBook,
-	button.btn_deleteBook, button.btn_rentBook, button.btn_returnBook,
-	button.btn_bulkRegist, button.btn_search_book {
-	display: inline-block;
-	font-size: 16px;
-	font-weight: bold;
-	line-height: 1.5;
-	text-align: center;
-	padding: 8px 12px;
-	margin: 10px 5px 0;
-	background-color: #7db4e6;
-	border-bottom: solid 2px rgba(0, 0, 0, .2);
-	box-shadow: inset 0 2px 0 rgba(255, 255, 255, .2), 0 2px 2px
-		rgba(0, 0, 0, .2);
-	color: #fff;
+.book_publisher p{
+	max-width: 150px;
 }
 
-button.btn_search_book {
-	background-color: #7b6175;
-	border: outset;
+.wordOverflow{
+	white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-a.btn_bulk_book {
+a.btn_add_book,a.btn_bulk_book, button.btn_addBook,button.btn_editBook, button.btn_deleteBook,button.btn_rentBook,button.btn_returnBook,button.btn_bulkRegist {
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.5;
+    text-align: center;
+    padding: 8px 12px;
+    margin: 10px 5px 0;
+    background-color: #7db4e6;
+    border-bottom: solid 2px rgba(0, 0, 0, .2);
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, .2), 0 2px 2px
+        rgba(0, 0, 0, .2);
+    color: #fff;
+}
+a.btn_bulk_book{
 	background-color: #66cdaa;
 }
 
@@ -205,9 +218,10 @@ a:hover, button:hover {
 }
 
 .content_right input, .detail_book_content .content_right p {
-	border-bottom: 1px solid #cccccc;
-	margin: 5px 0 15px;
-	font-size: 15px;
+  border-bottom: 1px solid #cccccc;
+  margin: 5px 0 15px;
+  font-size: 15px;
+  word-break: break-word;
 }
 
 .detail_book_content .content_left {
@@ -218,11 +232,12 @@ a:hover, button:hover {
 	width: 275px;
 }
 
-.detail_book_content .content_right p {
-	padding: 5px 0;
-	width: 99.2%;
-	text-indent: 1em;
-	vertical-align: middle;
+.detail_book_content .content_right p{
+    padding: 5px 0;
+    width: 99.2%;
+    text-indent: 1em;
+    vertical-align: middle;
+    word-break: break-word;
 }
 
 .content_right input:-webkit-autofill {
@@ -262,6 +277,11 @@ button.btn_addBook:hover, button.btn_editBook:hover, button.btn_deleteBook:hover
 	button.btn_rentBook:hover, button.btn_returnBook:hover, button.btn_bulkRegist:hover
 	{
 	cursor: pointer;
+}
+
+button.btn_deleteBook:disabled, button.btn_rentBook:disabled, button.btn_returnBook:disabled{
+	cursor: default;
+	opacity: 1;
 }
 
 hr.border_add {

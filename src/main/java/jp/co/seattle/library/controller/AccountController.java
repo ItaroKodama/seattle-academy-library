@@ -35,7 +35,6 @@ public class AccountController {
 
     /**
      * 新規アカウント作成
-     *
      * @param email メールアドレス
      * @param password パスワード
      * @param passwordForCheck 確認用パスワード
@@ -54,13 +53,16 @@ public class AccountController {
 
         // TODO バリデーションチェック、パスワード一致チェック実装
         if (!(email.matches("^([a-zA-Z0-9])+([a-zA-Z0-9\\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\\._-])*$"))) {
-            model.addAttribute("accountErrorMessage1", "メールアドレスの形式が間違っています");
+            model.addAttribute("emailErrorMessage", "メールアドレスの形式が間違っています");
             return "createAccount";
         } else if (!(password.matches("^[a-zA-Z0-9]+$"))) {
-            model.addAttribute("accountErrorMessage2", "パスワードは半角英数字で入力してください");
+            model.addAttribute("passwordErrorMessage", "パスワードは半角英数字で入力してください");
             return "createAccount";
         } else if (!(password.equals(passwordForCheck))) {
-            model.addAttribute("accountErrorMessage3", "パスワードが一致しません");
+            model.addAttribute("checkPasswordErrorMessage", "パスワードが一致しません");
+            return "createAccount";
+        } else if (usersService.selectUserInfo(email) != null) {
+            model.addAttribute("emailErrorMessage", "アカウントがすでに存在します");
             return "createAccount";
         } else {
             // パラメータで受け取ったユーザ情報をDtoに格納する。

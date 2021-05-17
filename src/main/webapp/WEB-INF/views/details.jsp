@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="resources/css/lightbox.css">
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="resources/js/lightbox.js" /></script>
+<script src="resources/js/buttonInactive.js" /></script>
 </head>
 <body class="wrapper">
     <header>
@@ -46,10 +47,10 @@
                 </div>
                 <c:choose>
                     <c:when test="${bookDetailsInfo.borrowing}">
-                        <p>貸し出し中</p>
+                        <p class="borrowing_status">貸し出し中</p>
                     </c:when>
                     <c:otherwise>
-                        <p>貸し出し可</p>
+                        <p class="borrowing_status">貸し出し可</p>
                     </c:otherwise>
                 </c:choose>
             </div>
