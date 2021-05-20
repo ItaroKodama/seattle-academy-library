@@ -16,6 +16,7 @@ import io.minio.ObjectWriteResponse;
 import io.minio.PutObjectArgs;
 import io.minio.http.Method;
 import jp.co.seattle.library.config.MinioConfig;
+import jp.co.seattle.library.dto.BookDetailsInfo;
 
 /**
  * サムネイルサービス
@@ -79,6 +80,34 @@ public class ThumbnailService {
 
         return url;
 
+    }
+
+    /**
+     * サムネイル画像を登録
+     * @param file アップロードするサムネイルファイル
+     * @param bookInfo
+     * @return 正常終了ならtrue,異常終了ならfalse
+     */
+    public boolean uploadThumbnail(MultipartFile file, BookDetailsInfo bookInfo) {
+        String thumbnail = file.getOriginalFilename();
+
+        if (!file.isEmpty()) {
+            try {
+                // サムネイル画像をアップロード
+                String fileName = uploadThumbnail(thumbnail, file);
+                // URLを取得
+                String thumbnailUrl = getURL(fileName);
+
+                bookInfo.setThumbnailName(fileName);
+                bookInfo.setThumbnailUrl(thumbnailUrl);
+
+            } catch (Exception e) {
+                // 異常終了時の処理
+                logger.error("サムネイルアップロードでエラー発生", e);
+                return false;
+            }
+        }
+        return true;
     }
 
 }
