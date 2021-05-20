@@ -40,10 +40,10 @@
                     <p>サムネイル画像は一括登録できません。編集画面で一冊単位で登録してください。</p>
                 </div>
                 <div>
-                    <input type="file" accept=".csv" name="csvFile" id="csvFile">
+                    <input type="file" accept=".csv" name="csvFile" id="csvFile" required>
                 </div>
                 <c:forEach var="errorMessage" items="${errorMessage}">
-                    <c:if test="${(errorMessage != 'null')}">
+                    <c:if test="${!empty errorMessage}">
                         <div class="error">${errorMessage}</div>
                     </c:if>
                 </c:forEach>
