@@ -86,6 +86,9 @@ public class ThumbnailService {
 
     }
 
+    /** サムネイルをminioから削除
+     * @param fileName 削除するサムネイルのファイル名
+     */
     public void deleteThumbnail(String fileName) {
         try {
             minioClient.removeObject(
