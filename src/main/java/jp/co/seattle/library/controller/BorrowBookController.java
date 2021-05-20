@@ -59,4 +59,15 @@ public class BorrowBookController {
 
     }
 
+    @Transactional
+    @RequestMapping(value = "/borrowingHistory", method = RequestMethod.POST, produces = "text/plain;charset=utf-8")
+    public String showBorrowingHistory(Locale locale,
+            @RequestParam("bookId") Integer bookId,
+            Model model) {
+
+        model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
+        model.addAttribute("borrowingHistory", booksService.borrowingHistory(bookId));
+        return "details";
+    }
+
 }

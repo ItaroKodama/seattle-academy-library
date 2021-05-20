@@ -80,6 +80,14 @@
                     <p>${bookDetailsInfo.description}</p>
                 </div>
             </div>
+            <c:if test="${!empty borrowingHistory}">
+                <c:forEach var="borrowingHistory" items="${borrowingHistory}">
+                    <ul class="borrowingHistory">
+                        <li>${borrowingHistory.borrowingDate}</li>
+                        <li>${borrowingHistory.returnDate}</li>
+                    </ul>
+                </c:forEach>
+            </c:if>
         </div>
         <div class="edtDelBookBtn_box">
             <form method="post" action="rentBook">
@@ -93,6 +101,9 @@
             </form>
             <form method="post" action="deleteBook">
                 <button type="submit" value="${bookDetailsInfo.bookId}" name="bookId" class="btn_deleteBook">削除</button>
+            </form>
+            <form method="post" action="borrowingHistory">
+                <button type="submit" value="${bookDetailsInfo.bookId}" name="bookId" class="btn_borrowingHistory">貸出履歴</button>
             </form>
         </div>
         <div class="center">

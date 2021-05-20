@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jp.co.seattle.library.service.BooksService;
+import jp.co.seattle.library.service.ThumbnailService;
 
 /**
  * 削除コントローラー
@@ -24,6 +25,8 @@ public class DeleteBookController {
     @Autowired
     private BooksService booksService;
 
+    @Autowired
+    private ThumbnailService thumbnailService;
     /**
      * 対象書籍を削除する
      *
@@ -46,6 +49,10 @@ public class DeleteBookController {
             model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
             return "details";
         }
+
+        //minioからサムネイルファイルを削除、booksテーブルから該当の書籍データを削除
+        thumbnailService.deleteThumbnail(booksService.getBookInfo(bookId).getThumbnailName());
+
         booksService.deleteBook(bookId);
 
         if (booksService.getBookList().isEmpty()) {
@@ -56,5 +63,41 @@ public class DeleteBookController {
         return "home";
 
     }
+    
+    /**
+     * 選択した書籍を一括削除
+     * @param locale
+     * @param bookIds 削除したい書籍のリスト
+     * @param model
+     * @return ホーム画面に遷移
+     */
+    @Transactional
+    @RequestMapping(value = "/deleteBooksBulk", method = RequestMethod.POST)
+    public String deleteBooksBulk(
+            Locale locale,
+            @RequestParam("deleteBookList") Integer[] bookIds,
+            Model model) {
+        logger.info("Welcome deleteBulk! The client locale is {}.", locale);
 
+        int deleteBooksCount = bookIds.length; //削除する書籍の冊数
+        for (int bookId : bookIds) {
+            if (!booksService.isBorrowing(bookId)) {
+                //minioからサムネイルファイルを削除、booksテーブルから該当の書籍データを削除
+                String test = booksService.getBookInfo(bookId).getThumbnailName();
+                thumbnailService.deleteThumbnail(booksService.getBookInfo(bookId).getThumbnailName());
+                booksService.deleteBook(bookId);
+            } else {
+                deleteBooksCount -= 1;
+                model.addAttribute("cannotDelete", "貸し出し中の書籍は削除されません");
+            }
+        }
+
+        if (booksService.getBookList().isEmpty()) {
+            model.addAttribute("noBook", "書籍データがありません");
+        } else {
+            model.addAttribute("bookList", booksService.getBookList());
+            model.addAttribute("deleteMessage", deleteBooksCount + "冊の書籍を削除しました");
+        }
+        return "home";
+    }
 }

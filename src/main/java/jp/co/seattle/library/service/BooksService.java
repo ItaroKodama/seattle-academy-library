@@ -1,5 +1,7 @@
 package jp.co.seattle.library.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,8 +13,10 @@ import org.springframework.stereotype.Service;
 
 import jp.co.seattle.library.dto.BookDetailsInfo;
 import jp.co.seattle.library.dto.BookInfo;
+import jp.co.seattle.library.dto.BorrowingHistory;
 import jp.co.seattle.library.rowMapper.BookDetailsInfoRowMapper;
 import jp.co.seattle.library.rowMapper.BookInfoRowMapper;
+import jp.co.seattle.library.rowMapper.BorrowingHistoryRowMapper;
 
 /**
  * 書籍サービス
@@ -118,16 +122,83 @@ public class BooksService {
         jdbcTemplate.update(sql);
     }
 
+     /**
+     * 書籍を部分一致または完全一致で検索
+     * @param isTitleSearchPartial 部分一致ならtrue
+     * @param titleSearchWord
+     * @param isAuthorSearchPartial 部分一致ならtrue
+     * @param authorSearchWord
+     * @param isPublisherSearchPartial 部分一致ならtrue
+     * @param publisherSearchWord
+     * @param isPublishDateSearchPartial 部分一致ならtrue
+     * @param publishDateSearchWord
+     * @return 検索で取得した書籍情報
+     */
+    public List<BookInfo> searchBooks(boolean isTitleSearchPartial, String titleSearchWord, boolean isAuthorSearchPartial,
+            String authorSearchWord, boolean isPublisherSearchPartial, String publisherSearchWord,
+            boolean isPublishDateSearchPartial, String publishDateSearchWord) {
+
+        //部分一致の場合は'='をlikeにし、検索ワードの前後を'%'で囲む
+        String isTitlePartial = "";
+        String isTitleLike = "=";
+        String isAuthorPartial = "";
+        String isAuthorLike = "=";
+        String isPublisherPartial = "";
+        String isPublisherLike = "=";
+        String isPublishDatePartial = "";
+        String isPublishDateLike = "=";
+        if (isTitleSearchPartial || titleSearchWord.isEmpty()) {
+            isTitlePartial = "%";
+            isTitleLike = "like";
+        }
+        if (isAuthorSearchPartial || authorSearchWord.isEmpty()) {
+            isAuthorPartial = "%";
+            isAuthorLike = "like";
+        }
+        if (isPublisherSearchPartial || publisherSearchWord.isEmpty()) {
+            isPublisherPartial = "%";
+            isPublisherLike = "like";
+        }
+        if (isPublishDateSearchPartial || publishDateSearchWord.isEmpty()) {
+            isPublishDatePartial = "%";
+            isPublishDateLike = "like";
+        }
+
+        String sql = "select id,title,author,publisher,publish_date,thumbnail_url from books where "
+                + "title " + isTitleLike + " '"
+                + isTitlePartial + titleSearchWord + isTitlePartial
+                + "' and author " + isAuthorLike + " '"
+                + isAuthorPartial + authorSearchWord + isAuthorPartial
+                + "' and publisher " + isPublisherLike + " '"
+                + isPublisherPartial + publisherSearchWord + isPublisherPartial
+                + "' and publish_date " + isPublishDateLike + " '"
+                + isPublishDatePartial + publishDateSearchWord + isPublishDatePartial
+                + "' order by TITLE asc";
+
+        return jdbcTemplate.query(sql, new BookInfoRowMapper());
+    }
+    
     /**
      * 書籍が貸し出し中の場合true
      * @param bookId
      * @return 
      */
     public boolean isBorrowing(int bookId) {
-        String sql = "select book_id from borrowing where book_id = " + bookId;
+        //書籍が一度も貸出されてない場合
+        if (jdbcTemplate.queryForObject("select max(id) from borrowing where book_id =" + bookId,
+                Integer.class) == null) {
+            return false;
+        }
+        //過去に貸出されている場合は、最新の情報を取得
         try {
-            jdbcTemplate.queryForObject(sql, Integer.class);
-            return true;
+            int borrowingId = jdbcTemplate.queryForObject("select max(id) from borrowing where book_id =" + bookId,
+                    Integer.class);
+            if (jdbcTemplate.queryForObject("select is_borrowing from borrowing where id = " + borrowingId,
+                    Integer.class) == 1) {
+                return true;
+            }
+            ;
+            return false;
         } catch (IncorrectResultSizeDataAccessException e) {
             return false;
         }
@@ -138,8 +209,9 @@ public class BooksService {
      * @param bookId 貸し出し書籍のID
      */
     public void borrowBook(int bookId) {
-        String sql = "insert into borrowing (book_id) values (" + bookId + ")";
-        jdbcTemplate.update(sql);
+        String borrowDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+        jdbcTemplate
+                .update("insert into borrowing (book_id, borrow_date) values (" + bookId + ", '" + borrowDate + "')");
     }
 
     /**
@@ -147,6 +219,21 @@ public class BooksService {
      * @param bookId 返却書籍のID
      */
     public void returnBook(int bookId) {
-        jdbcTemplate.update("delete from borrowing where book_id =" + bookId);
+        int borrowingId = jdbcTemplate.queryForObject("select max(id) from borrowing where book_id =" + bookId,
+                Integer.class);
+        String returnDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+        jdbcTemplate.update("update borrowing set return_date = '"
+                + returnDate + "', is_borrowing = 0 where id = " + borrowingId);
+    }
+
+    /**
+     * 書籍の貸出履歴の取得
+     * @param bookId 貸出履歴を取得したい書籍のID
+     * @return 貸出日時と返却日時のリスト
+     */
+    public List<BorrowingHistory> borrowingHistory(int bookId) {
+        String sql = "select borrow_date, return_date from borrowing where book_id = " + bookId;
+        return jdbcTemplate.query(sql, new BorrowingHistoryRowMapper());
+        
     }
 }
