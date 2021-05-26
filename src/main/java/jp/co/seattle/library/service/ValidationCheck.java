@@ -10,14 +10,22 @@ import org.springframework.stereotype.Controller;
 
 import jp.co.seattle.library.dto.BookDetailsInfo;
 
+/**
+ * @author user
+ * 書籍情報のバリデーションチェック
+ */
 @Controller
 public class ValidationCheck {
 
     /**
-     * 出版日とISBNのバリデーションチェック
+     * 書籍登録、編集時におけるバリデーションチェック
      * @param publishDate チェックする出版日
      * @param isbn チェックするISBN
-     * @return Listの１つ目に出版日のエラーメッセージ、２つ目にISBNのエラーメッセージ
+     * @param title チェックする書籍名
+     * @param author チェックする著者名
+     * @param publisher チェックする出版社名
+     * @param description チェックする説明文
+     * @return エラーメッセージのリスト（出版日、ISBN、書籍名、著者名、出版社名、説明文の順）
      */
     public List<String> validationCheck(String publishDate, String isbn, String title, String author, String publisher,
             String description) {
@@ -62,7 +70,7 @@ public class ValidationCheck {
     }
 
     /**
-     * 書籍情報の必須項目とバリデーションのチェック
+     * 書籍一括登録時における書籍情報の必須項目とバリデーションのチェック
      * @param bookInfo チェックする書籍情報
      * @return エラーメッセージ
      */

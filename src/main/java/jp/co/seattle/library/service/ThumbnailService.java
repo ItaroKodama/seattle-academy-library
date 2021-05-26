@@ -1,6 +1,9 @@
 package jp.co.seattle.library.service;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
@@ -14,13 +17,14 @@ import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.ObjectWriteResponse;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
+import io.minio.errors.MinioException;
 import io.minio.http.Method;
 import jp.co.seattle.library.config.MinioConfig;
 import jp.co.seattle.library.dto.BookDetailsInfo;
 
 /**
  * サムネイルサービス
- * 
  * サムネイルに関してS3とのやりとりの処理を実装する
  */
 @Controller
@@ -61,7 +65,6 @@ public class ThumbnailService {
                         .build());
 
         return fileName;
-
     }
 
     /**
@@ -79,13 +82,32 @@ public class ThumbnailService {
                         .build());
 
         return url;
+    }
 
+    /**
+     * minioからサムネイル画像を削除
+     * @param fileName 削除するファイル
+     */
+    public void deleteThumbnail(String fileName) {
+        try {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder().bucket(minioConfig.getMinioInfo("s3.bucket-name"))
+                            .object(S3_OBJECT_THUMBNAILS + fileName).build());
+        } catch (MinioException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * サムネイル画像を登録
      * @param file アップロードするサムネイルファイル
-     * @param bookInfo
+     * @param bookInfo アップロードしたファイルのファイル名とURLをboookInfoに設定
      * @return 正常終了ならtrue,異常終了ならfalse
      */
     public boolean uploadThumbnail(MultipartFile file, BookDetailsInfo bookInfo) {

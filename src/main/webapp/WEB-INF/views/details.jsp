@@ -14,8 +14,9 @@
 <link href="<c:url value="/resources/css/home.css" />" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="resources/css/lightbox.css">
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="resources/js/lightbox.js" /></script>
-<script src="resources/js/buttonInactive.js" /></script>
+<script src="resources/js/lightbox.js"></script>
+<script src="resources/js/buttonInactive.js"></script>
+<script src="resources/js/session.js"></script>
 </head>
 <body class="wrapper">
     <header>
@@ -37,11 +38,13 @@
                 <span>書籍の画像</span>
                 <div class="book_thumnail">
                     <c:if test="${bookDetailsInfo.thumbnailUrl != 'null'}">
-                        <a href="${bookDetailsInfo.thumbnailUrl}" data-lightbox="image-1"> <img class="book_noimg" src="${bookDetailsInfo.thumbnailUrl}" alt="NO IMAFE">
+                        <a href="${bookDetailsInfo.thumbnailUrl}" data-lightbox="image-1">
+                            <img class="book_noimg" src="${bookDetailsInfo.thumbnailUrl}" alt="NO IMAFE">
                         </a>
                     </c:if>
                     <c:if test="${bookDetailsInfo.thumbnailUrl == 'null'}">
-                        <a href="resources/img/noImg.png" data-lightbox="image-1"> <img class="book_noimg" src="resources/img/noImg.png">
+                        <a href="resources/img/noImg.png" data-lightbox="image-1"> 
+                            <img class="book_noimg" src="resources/img/noImg.png">
                         </a>
                     </c:if>
                 </div>
@@ -53,6 +56,7 @@
                         <p class="borrowing_status">貸し出し可</p>
                     </c:otherwise>
                 </c:choose>
+                <input type="hidden" class="borrowing_user" value="${bookDetailsInfo.borrowingUserName}">
             </div>
             <div class="content_right">
                 <div>
@@ -81,9 +85,22 @@
                 </div>
             </div>
         </div>
+        <c:if test="${!empty borrowingHistory}">
+            <ul class="borrowingHistory">
+                <li class="column_name">アカウント名</li>
+                <li class="column_name">貸出日時</li>
+                <li class="column_name">返却日時</li>
+                <c:forEach var="borrowingHistory" items="${borrowingHistory}">
+                    <li>${borrowingHistory.accountName}</li>
+                    <li>${borrowingHistory.borrowingDate}</li>
+                    <li>${borrowingHistory.returnDate}</li>
+                </c:forEach>
+            </ul>
+        </c:if>
         <div class="edtDelBookBtn_box">
             <form method="post" action="rentBook">
                 <button type="submit" value="${bookDetailsInfo.bookId}" name="bookId" class="btn_rentBook">借りる</button>
+                <input type="hidden" class="accountName" name="accountName">
             </form>
             <form method="post" action="returnBook">
                 <button type="submit" value="${bookDetailsInfo.bookId}" name="bookId" class="btn_returnBook">返す</button>
@@ -94,11 +111,9 @@
             <form method="post" action="deleteBook">
                 <button type="submit" value="${bookDetailsInfo.bookId}" name="bookId" class="btn_deleteBook">削除</button>
             </form>
-        </div>
-        <div class="center">
-            <c:if test="${!empty borrowingMessage}">
-                <div class="error">${borrowingMessage}</div>
-            </c:if>
+            <form method="post" action="borrowingHistory">
+                <button type="submit" value="${bookDetailsInfo.bookId}" name="bookId" class="btn_borrowingHistory">貸出履歴</button>
+            </form>
         </div>
     </main>
 </body>

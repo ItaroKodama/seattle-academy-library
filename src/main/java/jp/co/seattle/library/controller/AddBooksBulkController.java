@@ -51,7 +51,7 @@ public class AddBooksBulkController {
     /**
      * 一括登録
      * @param locale ロケール情報
-     * @param file csvファイル
+     * @param file 登録する書籍情報が入ったcsvファイル
      * @param model モデル
      * @return 一括登録画面
      */

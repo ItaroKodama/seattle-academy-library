@@ -5,45 +5,29 @@
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form"%>
 <html>
 <head>
-  
 <meta charset="UTF-8">
-  
-<title>書籍の追加｜シアトルライブラリ｜シアトルコンサルティング株式会社</title>   
+<title>書籍の追加｜シアトルライブラリ｜シアトルコンサルティング株式会社</title>
 <link href="<c:url value="/resources/css/reset.css" />" rel="stylesheet" type="text/css">
-  
 <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP" rel="stylesheet">
-  
 <link href="<c:url value="/resources/css/default.css" />" rel="stylesheet" type="text/css">
-  
 <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
-  
 <link href="<c:url value="/resources/css/home.css" />" rel="stylesheet" type="text/css">
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  
 <script src="resources/js/thumbnail.js"></script>
-    
 <script src="resources/js/addBtn.js"></script>
 </head>
 <body class="wrapper">
-      
     <header>
-            
         <div class="left">
                   <img class="mark" src="resources/img/logo.png" />       
             <div class="logo">Seattle Library</div>
-                
         </div>
-            
         <div class="right">
-                  
             <ul>
-                        
-                <li><a href="<%=request.getContextPath()%>/home" class="menu">Home</a></li>         
-                <li><a href="<%=request.getContextPath()%>/">ログアウト</a></li>       
+                <li><a href="<%=request.getContextPath()%>/home" class="menu">Home</a></li>
+                <li><a href="<%=request.getContextPath()%>/">ログアウト</a></li>
             </ul>
-                
         </div>
-          
     </header>
     <main>
         <form action="<%=request.getContextPath()%>/insertBook" method="post" enctype="multipart/form-data" id="data_upload_form">
@@ -63,7 +47,7 @@
                             <div class="error">${titleError}</div>
                         </c:if>
                         <c:if test="${!empty bookDetailsInfo}">
-                            <input type="text" name="title" value="${bookDetailsInfo.title}" required>
+                            <input type="text" name="title" value="${bookDetailsInfo.title}" autocomplete="off" required>
                         </c:if>
                         <c:if test="${empty bookDetailsInfo}">
                             <input type="text" name="title" autocomplete="off" required>
@@ -78,7 +62,7 @@
                             <input type="text" name="author" value="${bookDetailsInfo.author}" required>
                         </c:if>
                         <c:if test="${empty bookDetailsInfo}">
-                            <input type="text" name="author" autocomplete="off" required>
+                            <input type="text" name="author" required>
                         </c:if>
                     </div>
                     <div>
@@ -99,7 +83,7 @@
                             <div class="error">${notDateError}</div>
                         </c:if>
                         <c:if test="${!empty bookDetailsInfo}">
-                            <input type="text" name="publish_date" value="${bookDetailsInfo.publish_date}" required>
+                            <input type="text" name="publish_date" value="${bookDetailsInfo.publish_date}" required placeholder="YYYYMMDD">
                         </c:if>
                         <c:if test="${empty bookDetailsInfo}">
                             <input type="text" name="publish_date" required placeholder="YYYYMMDD">

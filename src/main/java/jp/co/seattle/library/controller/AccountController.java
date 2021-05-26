@@ -51,7 +51,7 @@ public class AccountController {
         // デバッグ用ログ
         logger.info("Welcome createAccount! The client locale is {}.", locale);
 
-        // TODO バリデーションチェック、パスワード一致チェック実装
+        // バリデーションチェック、パスワード一致チェック実装
         if (!(email.matches("^([a-zA-Z0-9])+([a-zA-Z0-9\\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\\._-])*$"))) {
             model.addAttribute("emailErrorMessage", "メールアドレスの形式が間違っています");
             return "createAccount";
