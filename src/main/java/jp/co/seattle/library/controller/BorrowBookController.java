@@ -24,26 +24,36 @@ public class BorrowBookController {
     @Autowired
     private BooksService booksService;
 
+    /**
+     * 書籍の貸出
+     * @param locale
+     * @param bookId 貸出書籍ID
+     * @param accountName 書籍を借りるユーザ名
+     * @param model
+     * @return 詳細画面に遷移
+     */
     @Transactional
     @RequestMapping(value = "/rentBook", method = RequestMethod.POST, produces = "text/plain;charset=utf-8")
     public String borrowBook(
             Locale locale,
             @RequestParam("bookId") Integer bookId,
+            @RequestParam("account_name") String accountName,
             Model model) {
         logger.info("Welcome borrowBooks.java! The client locale is {}.", locale);
 
-        if (booksService.isBorrowing(bookId)) {
-            model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
-            model.addAttribute("borrowingMessage", "この書籍は貸し出し中です。");
-            return "details";
-        }
-
-        booksService.borrowBook(bookId);
+        booksService.borrowBook(bookId, accountName);
 
         model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
         return "details";
     }
 
+    /**
+     * 書籍の返却
+     * @param locale
+     * @param bookId 返却書籍ID
+     * @param model
+     * @return 詳細画面に遷移
+     */
     @Transactional
     @RequestMapping(value = "/returnBook", method = RequestMethod.POST, produces = "text/plain;charset=utf-8")
     public String returnBook(
@@ -56,9 +66,15 @@ public class BorrowBookController {
 
         model.addAttribute("bookDetailsInfo", booksService.getBookInfo(bookId));
         return "details";
-
     }
 
+    /**
+     * 貸出履歴表示
+     * @param locale
+     * @param bookId 貸出履歴を表示したい書籍ID
+     * @param model
+     * @return 詳細画面に遷移
+     */
     @Transactional
     @RequestMapping(value = "/borrowingHistory", method = RequestMethod.POST, produces = "text/plain;charset=utf-8")
     public String showBorrowingHistory(Locale locale,

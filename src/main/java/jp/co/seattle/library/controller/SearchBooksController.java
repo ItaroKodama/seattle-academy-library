@@ -52,9 +52,11 @@ public class SearchBooksController {
             Model model) {
         logger.info("Welcome insertBooks.java! The client locale is {}.", locale);
 
-        List<BookInfo> matchBooks = booksService.searchBooks(isTitleSearchPartial, titleSearchWord,
+        List<BookInfo> matchBooks = booksService.searchBooks(
+                isTitleSearchPartial, titleSearchWord,
                 isAuthorSearchPartial, authorSearchWord,
-                isPublisherSearchPartial, publisherSearchWord, isPublishDateSearchPartial, publishDateSearchWord);
+                isPublisherSearchPartial, publisherSearchWord,
+                isPublishDateSearchPartial, publishDateSearchWord);
         if (CollectionUtils.isEmpty(matchBooks)) {
             model.addAttribute("noBook", "検索した書籍データがありません");
         } else {

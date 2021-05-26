@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>書籍の追加｜シアトルライブラリ｜シアトルコンサルティング株式会社</title>
+<title>書籍の編集｜シアトルライブラリ｜シアトルコンサルティング株式会社</title>
 <link href="<c:url value="/resources/css/reset.css" />" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP" rel="stylesheet">
 <link href="<c:url value="/resources/css/default.css" />" rel="stylesheet" type="text/css">
@@ -59,7 +59,7 @@
                             <div class="error">${titleError}</div>
                         </c:if>
                         <c:if test="${!empty bookDetailsInfo}">
-                            <input type="text" name="title" value="${bookDetailsInfo.title}" required>
+                            <input type="text" name="title" value="${bookDetailsInfo.title}" autocomplete="off" required>
                         </c:if>
                         <c:if test="${empty bookDetailsInfo}">
                             <input type="text" name="title" autocomplete="off" required>
@@ -74,7 +74,7 @@
                             <input type="text" name="author" value="${bookDetailsInfo.author}" required>
                         </c:if>
                         <c:if test="${empty bookDetailsInfo}">
-                            <input type="text" name="author" autocomplete="off" required>
+                            <input type="text" name="author" required>
                         </c:if>
                     </div>
                     <div>
@@ -95,10 +95,10 @@
                             <div class="error">${notDateError}</div>
                         </c:if>
                         <c:if test="${!empty bookDetailsInfo}">
-                            <input type="text" name="publish_date" value="${bookDetailsInfo.publish_date}" required>
+                            <input type="text" name="publish_date" value="${bookDetailsInfo.publish_date}" required placeholder="YYYYMMDD">
                         </c:if>
                         <c:if test="${empty bookDetailsInfo}">
-                            <input type="text" name="publish_date" required placeholder="YYYYMMDD" required>
+                            <input type="text" name="publish_date" required placeholder="YYYYMMDD">
                         </c:if>
                     </div>
                     <div>

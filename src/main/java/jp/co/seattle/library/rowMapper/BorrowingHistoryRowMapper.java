@@ -18,6 +18,7 @@ public class BorrowingHistoryRowMapper implements RowMapper<BorrowingHistory> {
 
         borrowingHistory.setBorrowingDate(rs.getString("borrow_date"));
         borrowingHistory.setReturnDate(rs.getString("return_date"));
+        borrowingHistory.setAccountName(rs.getString("account_name"));
         return borrowingHistory;
     }
 }

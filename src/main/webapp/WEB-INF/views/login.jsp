@@ -11,6 +11,8 @@
 <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP" rel="stylesheet">
 <link href="<c:url value="/resources/css/default.css" />" rel="stylesheet" type="text/css">
 <link href="<c:url value="/resources/css/login.css" />" rel="stylesheet" type="text/css">
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="resources/js/session.js"></script>
 </head>
 <body>
     <div class="wrapper">

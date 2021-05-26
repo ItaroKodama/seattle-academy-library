@@ -32,6 +32,8 @@ public class BookDetailsInfo {
 
     private boolean isBorrowing;
 
+    private String borrowingUserName;
+
 
     public BookDetailsInfo() {
 

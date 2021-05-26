@@ -14,5 +14,7 @@ public class BorrowingHistory {
 
     private String returnDate;
 
+    private String accountName;
+
 }
 

@@ -170,7 +170,8 @@ img.book_img {
 
 a.btn_add_book, a.btn_bulk_book, button.btn_addBook, button.btn_editBook,
 	button.btn_deleteBook, button.btn_rentBook, button.btn_returnBook,
-	button.btn_bulkRegist, button.btn_search_book, button.btn_bulkDelete, button.btn_borrowingHistory{
+	button.btn_bulkRegist, button.btn_search_book, button.btn_bulkDelete, button.btn_borrowingHistory, 
+	button.btn_sort_book{
 	display: inline-block;
 	font-size: 16px;
 	font-weight: bold;
@@ -187,6 +188,10 @@ a.btn_add_book, a.btn_bulk_book, button.btn_addBook, button.btn_editBook,
 
 a.btn_bulk_book {
 	background-color: #66cdaa;
+}
+
+button.btn_sort_book{
+	background-color: blue;
 }
 
 button.btn_borrowingHistory{
@@ -277,7 +282,7 @@ a:hover, button:hover {
 }
 
 button.btn_addBook, button.btn_editBook, button.btn_deleteBook, button.btn_rentBook,
-	button.btn_returnBook, button.btn_bulkRegist {
+	button.btn_returnBook, button.btn_bulkRegist, button.btn_borrowingHistory {
 	border-radius: 30px;
 	width: 120px;
 	margin-top: 20px;
@@ -286,13 +291,13 @@ button.btn_addBook, button.btn_editBook, button.btn_deleteBook, button.btn_rentB
 }
 
 button.btn_addBook:focus, button.btn_editBook:focus, button.btn_deleteBook:focus,
-	button.btn_rentBook:focus, button.btn_returnBook:focus, button.btn_bulkRegist:focus
+	button.btn_rentBook:focus, button.btn_returnBook:focus, button.btn_bulkRegist:focus, button.btn_borrowingHistory :focus
 	{
 	outline: none;
 }
 
 button.btn_addBook:hover, button.btn_editBook:hover, button.btn_deleteBook:hover,
-	button.btn_rentBook:hover, button.btn_returnBook:hover, button.btn_bulkRegist:hover
+	button.btn_rentBook:hover, button.btn_returnBook:hover, button.btn_bulkRegist:hover, button.btn_borrowingHistory:hover
 	{
 	cursor: pointer;
 }
@@ -376,7 +381,6 @@ hr.border_add {
 
 /* popup */
 .popup_overlay {
-	/*Hides pop-up when there is no "active" class*/
 	visibility: hidden;
 	z-index: 1;
 	position: fixed;
@@ -391,12 +395,10 @@ hr.border_add {
 }
 
 .popup_overlay.active {
-	/*displays pop-up when "active" class is present*/
 	visibility: visible;
 }
 
-.popup_content {
-	/*Hides pop-up content when there is no "active" class */
+.popup_search{
 	visibility: hidden;
 	z-index: 2;
 	position: fixed;
@@ -405,13 +407,32 @@ hr.border_add {
 	border-radius: 10px;
 }
 
-.popup_content.active {
-	/*Shows pop-up content when "active" class is present */
+.popup_search.active{
 	visibility: visible;
 }
 
-.popup_content h2 {
+.popup_sort{
+	visibility: hidden;
+	z-index: 2;
+	position: fixed;
+	background: #ffffff;
+	text-align: center;
+	border-radius: 10px;
+	padding: 20px;
+}
+
+.popup_sort.active{
+	visibility: visible;
+}
+
+.popup_search h2 {
 	margin-top: 1em;
+	font-size: larger;
+}
+
+.popup_sort h2{
+	margin-top: 1em;
+	margin-bottom: 1em;
 	font-size: larger;
 }
 
@@ -441,4 +462,27 @@ hr.border_add {
     background: white;
     width: 100%;
     padding-bottom: 10px;
+}
+
+/* borrowing history */
+.borrowingHistory{
+	margin: 50px;
+	width: 60vw;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.borrowingHistory li{
+	display: inline-block;
+    width: 19vw;
+    text-align: center;
+    margin: 2px;
+}
+
+.column_name::after{
+	content: '';
+    display: block;
+    background: gray;
+    height: 1px;
+    margin-top: 5px;
 }

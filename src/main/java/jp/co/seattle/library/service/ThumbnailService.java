@@ -25,7 +25,6 @@ import jp.co.seattle.library.dto.BookDetailsInfo;
 
 /**
  * サムネイルサービス
- * 
  * サムネイルに関してS3とのやりとりの処理を実装する
  */
 @Controller
@@ -66,7 +65,6 @@ public class ThumbnailService {
                         .build());
 
         return fileName;
-
     }
 
     /**
@@ -109,7 +107,7 @@ public class ThumbnailService {
     /**
      * サムネイル画像を登録
      * @param file アップロードするサムネイルファイル
-     * @param bookInfo
+     * @param bookInfo アップロードしたファイルのファイル名とURLをboookInfoに設定
      * @return 正常終了ならtrue,異常終了ならfalse
      */
     public boolean uploadThumbnail(MultipartFile file, BookDetailsInfo bookInfo) {

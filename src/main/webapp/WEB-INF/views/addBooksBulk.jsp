@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>書籍の追加｜シアトルライブラリ｜シアトルコンサルティング株式会社</title>
+<title>書籍の一括追加｜シアトルライブラリ｜シアトルコンサルティング株式会社</title>
 <link href="<c:url value="/resources/css/reset.css" />" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP" rel="stylesheet">
 <link href="<c:url value="/resources/css/default.css" />" rel="stylesheet" type="text/css">

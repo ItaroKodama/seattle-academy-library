@@ -1,6 +1,5 @@
 package jp.co.seattle.library.controller;
 
-
 import java.util.List;
 import java.util.Locale;
 
@@ -56,11 +55,19 @@ public class EditBookController {
     }
 
     /**
-     * 対象書籍を更新する
-     *
-     * @param locale ロケール情報
+     *  対象書籍を更新する
+     * @param locale
+     * @param title
+     * @param author
+     * @param publisher
+     * @param file
+     * @param thumbnailUrl
+     * @param thumbnailName
+     * @param publishDate
+     * @param isbn
+     * @param description
      * @param bookId 書籍ID
-     * @param model モデル情報
+     * @param model
      * @return 遷移先画面名
      */
     @Transactional
@@ -81,12 +88,26 @@ public class EditBookController {
 
         BookDetailsInfo bookInfo = new BookDetailsInfo();
         // パラメータで受け取った書籍情報をDtoに格納する。
-        bookInfo.setTitle(title);
-        bookInfo.setAuthor(author);
-        bookInfo.setPublisher(publisher);
-        bookInfo.setDescription(description);
         bookInfo.setBookId(bookId);
-        
+
+        //サムネイル画像の変更がある場合の処理
+        if (!file.isEmpty()) {
+            //古いサムネイルをminioから削除
+            thumbnailService.deleteThumbnail(thumbnailName);
+
+            // サムネイル画像をアップロード
+            if (!thumbnailService.uploadThumbnail(file, bookInfo)) {
+                model.addAttribute("bookDetailsInfo", bookInfo);
+                return "editBook";
+            }
+        } else {
+            //サムネイル画像の変更がない場合、ファイル名、URLを保持
+            if (!thumbnailUrl.isEmpty() && thumbnailUrl != "null") {
+                bookInfo.setThumbnailUrl(thumbnailUrl);
+                bookInfo.setThumbnailName(thumbnailName);
+            }
+        }
+
         //出版日とISBNのバリデーションチェック
         List<String> errorMsg = validationCheck.validationCheck(publishDate, isbn, title, author, publisher,
                 description);
@@ -125,20 +146,6 @@ public class EditBookController {
             model.addAttribute("bookDetailsInfo", bookInfo);
             return "editBook";
         }
-
-        //サムネイル画像の変更がない場合の処理
-        if (!thumbnailUrl.isEmpty()) {
-            bookInfo.setThumbnailUrl(thumbnailUrl);
-            bookInfo.setThumbnailName(thumbnailName);
-        }
-        // サムネイル画像をアップロード
-        if (!thumbnailService.uploadThumbnail(file, bookInfo)) {
-            model.addAttribute("bookDetailsInfo", bookInfo);
-            return "editBook";
-        }
-
-        //古いサムネイルをminioから削除
-        thumbnailService.deleteThumbnail(booksService.getBookInfo(bookId).getThumbnailName());
 
         // 書籍情報の編集
         booksService.updateBook(bookInfo);

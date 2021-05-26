@@ -20,7 +20,6 @@ import jp.co.seattle.library.rowMapper.BorrowingHistoryRowMapper;
 
 /**
  * 書籍サービス
- * 
  *  booksテーブルに関する処理を実装する
  */
 @Service
@@ -30,13 +29,11 @@ public class BooksService {
     private JdbcTemplate jdbcTemplate;
 
     /**
-     * 書籍リストを取得する
-     *
+     * 書籍リストを取得
      * @return 書籍リスト
      */
     public List<BookInfo> getBookList() {
-
-        // TODO 取得したい情報を取得するようにSQLを修正
+        // 取得したい情報を取得するようにSQLを修正
         List<BookInfo> gotBookList = jdbcTemplate.query(
                 "select id,title,author,publisher,publish_date,thumbnail_url from books order by TITLE asc",
                 new BookInfoRowMapper());
@@ -46,32 +43,28 @@ public class BooksService {
 
     /**
      * 書籍IDに紐づく書籍詳細情報を取得する
-     *
      * @param bookId 書籍ID
      * @return 書籍情報
      */
     public BookDetailsInfo getBookInfo(int bookId) {
-
-        // JSPに渡すデータを設定する
-        String sql = "SELECT * FROM books where id ="
-                + bookId;
-
+        // JSPに渡すデータを設定
+        String sql = "SELECT * FROM books where id = " + bookId;
         BookDetailsInfo bookDetailsInfo = jdbcTemplate.queryForObject(sql, new BookDetailsInfoRowMapper());
-
-        bookDetailsInfo.setBorrowing(isBorrowing(bookId));
-
+        // 書籍の貸出状況を設定
+        if (isBorrowing(bookId)) {
+            bookDetailsInfo.setBorrowing(true);
+            bookDetailsInfo.setBorrowingUserName(whoBorrowing(bookId));
+        } else {
+            bookDetailsInfo.setBorrowing(false);
+        }
         return bookDetailsInfo;
     }
 
-
-
     /**
-     * 書籍を登録する
-     *
-     * @param bookInfo 書籍情報
+     * 書籍を登録
+     * @param bookInfo 登録する書籍の情報
      */
     public void registBook(BookDetailsInfo bookInfo) {
-
         String sql = "INSERT INTO books (title, author,publisher,publish_date,isbn,description,thumbnail_name,thumbnail_url,reg_date,upd_date) VALUES ('"
                 + bookInfo.getTitle() + "','" + bookInfo.getAuthor() + "','" + bookInfo.getPublisher() + "','"
                 + bookInfo.getPublish_date() + "','"
@@ -90,18 +83,16 @@ public class BooksService {
      * @param bookID 削除対象の書籍ID
      */
     public void deleteBook(int bookId) {
-        String sql = "delete from books where ID = " + bookId;
-        jdbcTemplate.update(sql);
+        jdbcTemplate.update("delete from borrowing where book_id = " + bookId);
+        jdbcTemplate.update("delete from books where ID = " + bookId);
     }
 
     /**
      * 追加した書籍のIDを取得
      * @return booksテーブルのIDの最大値
      */
-    public int getBookId(){
-        String sql = "SELECT MAX(ID) FROM books";
-
-        return jdbcTemplate.queryForObject(sql, Integer.class);
+    public int getBookId() {
+        return jdbcTemplate.queryForObject("SELECT MAX(ID) FROM books", Integer.class);
     }
 
     /**
@@ -122,19 +113,20 @@ public class BooksService {
         jdbcTemplate.update(sql);
     }
 
-     /**
-     * 書籍を部分一致または完全一致で検索
-     * @param isTitleSearchPartial 部分一致ならtrue
-     * @param titleSearchWord
-     * @param isAuthorSearchPartial 部分一致ならtrue
-     * @param authorSearchWord
-     * @param isPublisherSearchPartial 部分一致ならtrue
-     * @param publisherSearchWord
-     * @param isPublishDateSearchPartial 部分一致ならtrue
-     * @param publishDateSearchWord
-     * @return 検索で取得した書籍情報
-     */
-    public List<BookInfo> searchBooks(boolean isTitleSearchPartial, String titleSearchWord, boolean isAuthorSearchPartial,
+    /**
+    * 書籍を部分一致または完全一致で検索
+    * @param isTitleSearchPartial 部分一致ならtrue
+    * @param titleSearchWord
+    * @param isAuthorSearchPartial 部分一致ならtrue
+    * @param authorSearchWord
+    * @param isPublisherSearchPartial 部分一致ならtrue
+    * @param publisherSearchWord
+    * @param isPublishDateSearchPartial 部分一致ならtrue
+    * @param publishDateSearchWord
+    * @return 検索で取得した書籍情報
+    */
+    public List<BookInfo> searchBooks(boolean isTitleSearchPartial, String titleSearchWord,
+            boolean isAuthorSearchPartial,
             String authorSearchWord, boolean isPublisherSearchPartial, String publisherSearchWord,
             boolean isPublishDateSearchPartial, String publishDateSearchWord) {
 
@@ -177,63 +169,78 @@ public class BooksService {
 
         return jdbcTemplate.query(sql, new BookInfoRowMapper());
     }
-    
+
     /**
-     * 書籍が貸し出し中の場合true
-     * @param bookId
-     * @return 
+     * 書籍の貸出状況取得
+     * @param bookId 書籍ID
+     * @return 貸出中ならtrue
      */
     public boolean isBorrowing(int bookId) {
-        //書籍が一度も貸出されてない場合
-        if (jdbcTemplate.queryForObject("select max(id) from borrowing where book_id =" + bookId,
-                Integer.class) == null) {
-            return false;
-        }
-        //過去に貸出されている場合は、最新の情報を取得
         try {
-            int borrowingId = jdbcTemplate.queryForObject("select max(id) from borrowing where book_id =" + bookId,
-                    Integer.class);
-            if (jdbcTemplate.queryForObject("select is_borrowing from borrowing where id = " + borrowingId,
-                    Integer.class) == 1) {
-                return true;
+            //                    ストアドファンクション
+            //                    CREATE DEFINER=`root`@`%` FUNCTION `isBorrowing`(bookId bigint(20)) RETURNS bit(1)
+            //                            BEGIN
+            //                                select max(id) from borrowing where book_id = bookId into @tmp;
+            //                                select is_borrowing from borrowing where id = @tmp into @result;
+            //                                RETURN(@result);
+            //                            END;
+            Integer isBorrowing = jdbcTemplate.queryForObject("select isBorrowing(" + bookId + ")", Integer.class);
+            if (isBorrowing == null || isBorrowing == 0) {
+                return false;
             }
-            ;
-            return false;
+            return true;
         } catch (IncorrectResultSizeDataAccessException e) {
             return false;
         }
     }
 
     /**
-     * 書籍を貸し出しテーブルに追加
-     * @param bookId 貸し出し書籍のID
+     * 書籍を貸出テーブルに追加
+     * @param bookId 貸出書籍のID
+     * @param accountName 書籍を借りたユーザ名
      */
-    public void borrowBook(int bookId) {
+    public void borrowBook(int bookId, String accountName) {
         String borrowDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
-        jdbcTemplate
-                .update("insert into borrowing (book_id, borrow_date) values (" + bookId + ", '" + borrowDate + "')");
+        String sql = "insert into borrowing (book_id, borrow_date, account_name) "
+                + "values (" + bookId + ", '" + borrowDate + "', '" + accountName + "')";
+
+        jdbcTemplate.update(sql);
     }
 
     /**
-     * 書籍を貸し出しテーブルから削除
+     * 書籍を貸出テーブルから論理削除
      * @param bookId 返却書籍のID
      */
     public void returnBook(int bookId) {
-        int borrowingId = jdbcTemplate.queryForObject("select max(id) from borrowing where book_id =" + bookId,
-                Integer.class);
         String returnDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
-        jdbcTemplate.update("update borrowing set return_date = '"
-                + returnDate + "', is_borrowing = 0 where id = " + borrowingId);
+        //                    ストアドプロシージャ
+        //                    CREATE DEFINER=`root`@`%` PROCEDURE `returnBook`(in bookId bigint(20), returnDate varchar(20))
+        //                            begin
+        //                                select max(id) from borrowing where book_id = bookId into @tmp;
+        //                                update borrowing set return_date = returnDate, is_borrowing = 0 where id = @tmp;
+        //                            end;
+        jdbcTemplate.update("call returnBook(" + bookId + ",'" + returnDate + "')");
     }
 
     /**
      * 書籍の貸出履歴の取得
      * @param bookId 貸出履歴を取得したい書籍のID
-     * @return 貸出日時と返却日時のリスト
+     * @return 貸出日時と返却日時、借りたユーザ名のリスト
      */
     public List<BorrowingHistory> borrowingHistory(int bookId) {
-        String sql = "select borrow_date, return_date from borrowing where book_id = " + bookId;
+        String sql = "select borrow_date, return_date, account_name from borrowing where book_id = " + bookId;
+
         return jdbcTemplate.query(sql, new BorrowingHistoryRowMapper());
-        
+
+    }
+
+    /**
+     * 書籍を借りているユーザ名を取得
+     * @param bookId 貸出中の書籍
+     * @return 書籍を借りているユーザ名
+     */
+    public String whoBorrowing(int bookId) {
+        String sql = "select account_name from borrowing where is_borrowing = 1 and book_id = " + bookId;
+        return jdbcTemplate.queryForObject(sql, String.class);
     }
 }
