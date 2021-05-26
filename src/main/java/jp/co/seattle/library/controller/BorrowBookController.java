@@ -37,7 +37,7 @@ public class BorrowBookController {
     public String borrowBook(
             Locale locale,
             @RequestParam("bookId") Integer bookId,
-            @RequestParam("account_name") String accountName,
+            @RequestParam("accountName") String accountName,
             Model model) {
         logger.info("Welcome borrowBooks.java! The client locale is {}.", locale);
 

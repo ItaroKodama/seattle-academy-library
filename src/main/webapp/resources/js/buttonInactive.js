@@ -3,7 +3,7 @@ $(function(){
 	if(borrowingStatus === '貸し出し中'){
 		$('.btn_rentBook').prop('disabled', true);
 		$('.btn_deleteBook').prop('disabled', true);
-		if($('.borrowing_user').val() != sessionStorage.getItem('account_name')){
+		if($('.borrowing_user').val() != sessionStorage.getItem('accountName')){
 			$('.btn_returnBook').prop('disabled', true);
 		}
 	}
