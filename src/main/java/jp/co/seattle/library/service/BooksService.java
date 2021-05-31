@@ -34,9 +34,9 @@ public class BooksService {
      */
     public List<BookInfo> getBookList() {
         // 取得したい情報を取得するようにSQLを修正
-        List<BookInfo> gotBookList = jdbcTemplate.query(
-                "select id,title,author,publisher,publish_date,thumbnail_url from books order by TITLE asc",
-                new BookInfoRowMapper());
+        String sql = "select a.id,a.title,a.author,a.publisher,a.publish_date,a.thumbnail_url, b.is_borrowing "
+                + "from books a left join borrowing b on a.id = b.book_id and b.is_borrowing = 1  order by a.TITLE asc";
+        List<BookInfo> gotBookList = jdbcTemplate.query(sql, new BookInfoRowMapper());
 
         return gotBookList;
     }
@@ -156,7 +156,8 @@ public class BooksService {
             isPublishDateLike = "like";
         }
 
-        String sql = "select id,title,author,publisher,publish_date,thumbnail_url from books where "
+        String sql = "select a.id,a.title,a.author,a.publisher,a.publish_date,a.thumbnail_url, b.is_borrowing "
+                + "from books a left join borrowing b on a.id = b.book_id and b.is_borrowing = 1 where " 
                 + "title " + isTitleLike + " '"
                 + isTitlePartial + titleSearchWord + isTitlePartial
                 + "' and author " + isAuthorLike + " '"

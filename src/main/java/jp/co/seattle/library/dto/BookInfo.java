@@ -23,6 +23,8 @@ public class BookInfo {
 
     private String thumbnail;
 
+    private boolean isBorrowing;
+
     public BookInfo() {
 
     }

@@ -27,6 +27,7 @@ public class DeleteBookController {
 
     @Autowired
     private ThumbnailService thumbnailService;
+
     /**
      * 対象書籍を削除する
      *
@@ -56,7 +57,7 @@ public class DeleteBookController {
         return "home";
 
     }
-    
+
     /**
      * 選択した書籍を一括削除
      * @param locale
@@ -72,23 +73,17 @@ public class DeleteBookController {
             Model model) {
         logger.info("Welcome deleteBulk! The client locale is {}.", locale);
 
-        int deleteBooksCount = bookIds.length; //削除する書籍の冊数
         for (int bookId : bookIds) {
-            if (!booksService.isBorrowing(bookId)) {
-                //minioからサムネイルファイルを削除、booksテーブルから該当の書籍データを削除
-                thumbnailService.deleteThumbnail(booksService.getBookInfo(bookId).getThumbnailName());
-                booksService.deleteBook(bookId);
-            } else {
-                deleteBooksCount -= 1;
-                model.addAttribute("cannotDelete", "貸し出し中の書籍は削除されません");
-            }
+            //minioからサムネイルファイルを削除、booksテーブルから該当の書籍データを削除
+            thumbnailService.deleteThumbnail(booksService.getBookInfo(bookId).getThumbnailName());
+            booksService.deleteBook(bookId);
         }
 
         if (booksService.getBookList().isEmpty()) {
             model.addAttribute("noBook", "書籍データがありません");
         } else {
             model.addAttribute("bookList", booksService.getBookList());
-            model.addAttribute("deleteMessage", deleteBooksCount + "冊の書籍を削除しました");
+            model.addAttribute("deleteMessage", bookIds.length + "冊の書籍を削除しました");
         }
         return "home";
     }
